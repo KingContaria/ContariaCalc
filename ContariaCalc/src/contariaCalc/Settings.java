@@ -21,6 +21,7 @@ public class Settings implements ActionListener {
 		
 		settings.setSize(250, 250);
 		settings.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		settings.setAlwaysOnTop(true);
 		settings.setVisible(true);
 		settings.add(panel);
 		
