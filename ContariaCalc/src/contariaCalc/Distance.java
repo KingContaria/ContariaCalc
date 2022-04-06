@@ -14,7 +14,7 @@ public class Distance {
 		String[] sh_coords_split = sh_coords.split(" ");
 		
 		if(eyethrow_coords_split.length == 3) {
-			if(sh_coords_split.length == 2) {
+			if(sh_coords_split.length > 1) {
 				
 				double x1 = Double.parseDouble(eyethrow_coords_split[0]);
 				double z1 = Double.parseDouble(eyethrow_coords_split[1]);

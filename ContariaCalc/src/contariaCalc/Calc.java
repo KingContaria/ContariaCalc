@@ -6,7 +6,7 @@ public class Calc {
 		
 	}
 	
-	public static String calculation(String firstthrow, String secondthrow) {
+	public static String calculation(String firstthrow, String secondthrow, boolean ShowNetherCoords, int NetherCoordsDecimals, boolean ShowChunkCoords) {
 		
 		String sh_coords = "Error";
 		
@@ -50,6 +50,38 @@ public class Calc {
 				int y_ = (int) Math.round(y);
 				
 				sh_coords = x_ + " " + y_;
+				
+				if(ShowNetherCoords) {
+					
+					double xnether = Math.round((x / 8) * Math.pow(10 , NetherCoordsDecimals)) / Math.pow(10 , NetherCoordsDecimals);
+					double ynether = Math.round((y / 8) * Math.pow(10 , NetherCoordsDecimals)) / Math.pow(10 , NetherCoordsDecimals);
+					if(NetherCoordsDecimals == 0) {
+						int xnether_ = (int) xnether;
+						int ynether_ = (int) ynether;
+						sh_coords += " / " + xnether_ + " " + ynether_;
+					}
+					else {
+						sh_coords += " / " + xnether + " " + ynether;
+					}
+					
+				}
+				else {
+					sh_coords += " / ";
+				}
+				
+				if(ShowChunkCoords) {
+					
+					int xchunk = x_ / 16;
+					int ychunk = y_ / 16;
+					if(x_ < 0) {
+						xchunk -= 1;
+					}
+					if(y_ < 0) {
+						ychunk -= 1;
+					}
+					sh_coords += " / " + xchunk + " " + ychunk;
+					
+				}
 				
 				
 			}
