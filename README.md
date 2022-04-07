@@ -2,6 +2,7 @@
 Calculator for Pre 1.9 Minecraft Java Speedrunning
 by KingContaria
 
+
 How to use the Calculator:
 
 After throwing an eye, point your crosshair at the eye of ender, then fill your x and z coordinate and the horizontal angle you are looking at into the first Textfield. Leave spaces between the values.
