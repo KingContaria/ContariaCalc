@@ -1,5 +1,7 @@
 package contariaCalc;
 
+import java.util.regex.Pattern;
+
 public class Calc {
 	
 	public Calc() {
@@ -22,23 +24,24 @@ public class Calc {
 				double x2;
 				double z2;
 				double a2;
+				
 				if(secondcoords[0].contains("+")) {
-					System.out.println("Check");
-					secondcoords[0].replaceAll("+-", "-");
-					System.out.println(secondcoords[0]);
-					x2 = x1 + Double.parseDouble(secondcoords[0]);
+					String[] secondcoords_ = secondcoords[0].split(Pattern.quote("+"));
+					x2 = x1 + Double.parseDouble(secondcoords_[1]);
 				} else {
 					x2 = Double.parseDouble(secondcoords[0]);
 				}
+				
 				if(secondcoords[1].contains("+")) {
-					secondcoords[1].replace("+", "");
-					z2 = z1 + Double.parseDouble(secondcoords[1]);
+					String[] secondcoords_ = secondcoords[1].split(Pattern.quote("+"));
+					z2 = z1 + Double.parseDouble(secondcoords_[1]);
 				} else {
 					z2 = Double.parseDouble(secondcoords[1]);
 				}
+				
 				if(secondcoords[2].contains("+")) {
-					secondcoords[2].replace("+", "");
-					a2 = a1 + Double.parseDouble(secondcoords[2]);
+					String[] secondcoords_ = secondcoords[2].split(Pattern.quote("+"));
+					a2 = a1 + Double.parseDouble(secondcoords_[1]);
 				} else {
 					a2 = Double.parseDouble(secondcoords[2]);
 				}

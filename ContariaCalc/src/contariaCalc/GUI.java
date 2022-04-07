@@ -30,6 +30,8 @@ public class GUI implements ActionListener {
 	static JTextField secondcoords = new JTextField("");
 	
 	public static boolean CoordsOverlay = false;
+	public static boolean ClipboardReader = false;
+	public static int ClipboardreaderDelay = 1000;
 	public static boolean ShowDistance = true;
 	public static int DistanceFrom = 0;
 	public static boolean ShowNetherCoords = false;
@@ -179,6 +181,88 @@ public class GUI implements ActionListener {
 			hidden = true;
 		}
 	}
+	
+	public static void Find() {
+		
+		numberofcalculations++;
+		String sh_coordsraw = Calc.calculation(firstcoords.getText(), secondcoords.getText(), ShowNetherCoords, NetherCoordsDecimals, ShowChunkCoords);
+		if(sh_coordsraw == "Error") {
+			result.setText("Error");
+		}
+		else {
+		String[] sh_coordssplit = sh_coordsraw.split(" / ");
+		String sh_coords = sh_coordssplit[0];
+		frame.setSize(225*m/100, 185*m/100);
+		int framex_extra = 0;
+		nethercoords.setVisible(false);
+		nethercoords_.setVisible(false);
+		chunkcoords.setVisible(false);
+		chunkcoords_.setVisible(false);
+		if(ShowDistance) {
+			switch(DistanceFrom) {
+			case 0:	sh_coords = sh_coords + "   (D: " + Distance.DistanceCalc(firstcoords.getText(), sh_coords) + ")"; break;
+			case 1: sh_coords = sh_coords + "   (D: " + Distance.DistanceCalc(secondcoords.getText(), sh_coords) + ")"; break;
+			case 2: distance1.setText("D: " + Distance.DistanceCalc(firstcoords.getText(), sh_coords));
+					distance2.setText("D: " + Distance.DistanceCalc(secondcoords.getText(), sh_coords));
+					frame.setSize(260*m/100, 185*m/100);
+					framex_extra = 35;
+		}}
+		
+		int v = 90 * m/100;
+		if(v < 100) {
+			v = 100;
+		}
+		
+		extracoords = 0;
+		
+		if(ShowNetherCoords) {
+			frame.setSize((225+framex_extra)*m/100, 205*m/100);
+			nethercoords_.setText(sh_coordssplit[1]);
+			nethercoords_.setBounds(v, 140*m/100, 100*m/100, 20*m/100);
+			nethercoords.setVisible(true);
+			nethercoords_.setVisible(true);
+			extracoords++;
+		}
+		
+		if(ShowChunkCoords) {
+			
+			frame.setSize((225+framex_extra)*m/100, (205+extracoords*20)*m/100);
+			chunkcoords.setBounds(10*m/100, (140+extracoords*20)*m/100, 100*m/100, 20*m/100);
+			chunkcoords_.setBounds(v, (140+extracoords*20)*m/100, 100*m/100, 20*m/100);
+			chunkcoords_.setText(sh_coordssplit[2]);
+			chunkcoords.setVisible(true);
+			chunkcoords_.setVisible(true);
+			extracoords++;
+		}
+		
+		if(CoordsOverlay == true) {
+			new CoordsOverlay(sh_coords);
+		}
+		
+		v = 90 * m/100;
+		if(v < 90) {
+			v = 90;
+		}
+		result.setBounds(v, 120*m/100, 150*m/100, 20*m/100);
+		result.setText(sh_coords);
+		
+		}
+		
+		if(Autoclear) {
+			new Thread() {
+				
+	            @Override
+	            public void run() {
+	                try {
+	                	new Autoclear(numberofcalculations, AutoclearAfter);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+	            }
+	        }.start();
+		}
+		
+	}
 			
 
 	@Override
@@ -186,83 +270,7 @@ public class GUI implements ActionListener {
 
 		if(e.getSource() == find) {
 			
-			numberofcalculations++;
-			String sh_coordsraw = Calc.calculation(firstcoords.getText(), secondcoords.getText(), ShowNetherCoords, NetherCoordsDecimals, ShowChunkCoords);
-			if(sh_coordsraw == "Error") {
-				result.setText("Error");
-			}
-			else {
-			String[] sh_coordssplit = sh_coordsraw.split(" / ");
-			String sh_coords = sh_coordssplit[0];
-			frame.setSize(225*m/100, 185*m/100);
-			int framex_extra = 0;
-			nethercoords.setVisible(false);
-			nethercoords_.setVisible(false);
-			chunkcoords.setVisible(false);
-			chunkcoords_.setVisible(false);
-			if(ShowDistance) {
-				switch(DistanceFrom) {
-				case 0:	sh_coords = sh_coords + "   (D: " + Distance.DistanceCalc(firstcoords.getText(), sh_coords) + ")"; break;
-				case 1: sh_coords = sh_coords + "   (D: " + Distance.DistanceCalc(secondcoords.getText(), sh_coords) + ")"; break;
-				case 2: distance1.setText("D: " + Distance.DistanceCalc(firstcoords.getText(), sh_coords));
-						distance2.setText("D: " + Distance.DistanceCalc(secondcoords.getText(), sh_coords));
-						frame.setSize(260*m/100, 185*m/100);
-						framex_extra = 35;
-			}}
-			
-			int v = 90 * m/100;
-			if(v < 100) {
-				v = 100;
-			}
-			
-			extracoords = 0;
-			
-			if(ShowNetherCoords) {
-				frame.setSize((225+framex_extra)*m/100, 205*m/100);
-				nethercoords_.setText(sh_coordssplit[1]);
-				nethercoords_.setBounds(v, 140*m/100, 100*m/100, 20*m/100);
-				nethercoords.setVisible(true);
-				nethercoords_.setVisible(true);
-				extracoords++;
-			}
-			
-			if(ShowChunkCoords) {
-				
-				frame.setSize((225+framex_extra)*m/100, (205+extracoords*20)*m/100);
-				chunkcoords.setBounds(10*m/100, (140+extracoords*20)*m/100, 100*m/100, 20*m/100);
-				chunkcoords_.setBounds(v, (140+extracoords*20)*m/100, 100*m/100, 20*m/100);
-				chunkcoords_.setText(sh_coordssplit[2]);
-				chunkcoords.setVisible(true);
-				chunkcoords_.setVisible(true);
-				extracoords++;
-			}
-			
-			if(CoordsOverlay == true) {
-				new CoordsOverlay(sh_coords);
-			}
-			
-			v = 90 * m/100;
-			if(v < 90) {
-				v = 90;
-			}
-			result.setBounds(v, 120*m/100, 150*m/100, 20*m/100);
-			result.setText(sh_coords);
-			
-			}
-			
-			if(Autoclear) {
-				new Thread() {
-					
-		            @Override
-		            public void run() {
-		                try {
-		                	new Autoclear(numberofcalculations, AutoclearAfter);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-		            }
-		        }.start();
-			}
+			Find();
 			
 		}
 		

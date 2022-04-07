@@ -16,6 +16,11 @@ public class Settings implements ActionListener, ChangeListener {
 	
 	JFrame settings = new JFrame("Settings");
 	JPanel panel = new JPanel();
+	JLabel clipboardreader = new JLabel("ClipboardReader:");
+	JButton clipboardreadertoggle = new JButton("OFF");
+	JLabel clipboardreaderdelay = new JLabel("Check every                 ms");
+	JTextField clipboardreaderdelayms = new JTextField(GUI.ClipboardreaderDelay + "");
+	JButton applyclipboardreaderdelayms = new JButton("✔");
 	JLabel showdistance = new JLabel("Show Distance to SH:");
 	JButton showdistancetoggle = new JButton("OFF");
 	JLabel distancefrom = new JLabel("Distance from:");
@@ -51,6 +56,23 @@ public class Settings implements ActionListener, ChangeListener {
 		
 		panel.setLayout(null);
 
+		clipboardreader.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
+		panel.add(clipboardreader);
+		clipboardreadertoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
+		if(GUI.ClipboardReader) {
+			clipboardreadertoggle.setText("ON");
+		}
+		panel.add(clipboardreadertoggle);
+		settingsnumber++;
+		
+		clipboardreaderdelay.setBounds(10, 10 + settingsnumber * settingsgap, 250, 20);
+		panel.add(clipboardreaderdelay);
+		clipboardreaderdelayms.setBounds(84, 10 + settingsnumber * settingsgap, 45, 20);
+		panel.add(clipboardreaderdelayms);
+		applyclipboardreaderdelayms.setBounds(156, 10 + settingsnumber * settingsgap, 44, 20);
+		panel.add(applyclipboardreaderdelayms);
+		settingsnumber++;
+		
 		showdistance.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
 		panel.add(showdistance);
 		showdistancetoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
@@ -141,6 +163,8 @@ public class Settings implements ActionListener, ChangeListener {
 		
 		settings.setSize(230, 50 + settingsnumber * settingsgap);
 		
+		clipboardreadertoggle.addActionListener(this);
+		applyclipboardreaderdelayms.addActionListener(this);
 		showdistancetoggle.addActionListener(this);
 		distancefromtoggle.addActionListener(this);
 		shownethercoordstoggle.addActionListener(this);
@@ -168,6 +192,26 @@ public class Settings implements ActionListener, ChangeListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
+		if(e.getSource() == clipboardreadertoggle) {
+			if(GUI.ClipboardReader) {
+				GUI.ClipboardReader = false;
+				clipboardreadertoggle.setText("OFF");
+			}
+			else {
+				GUI.ClipboardReader = true;
+				clipboardreadertoggle.setText("ON");
+				new Thread() {
+		            public void run() {
+		                new ClipboardReader();
+		            }
+		        }.start();
+			}
+		}
+		
+		if(e.getSource() == applyclipboardreaderdelayms) {
+			GUI.ClipboardreaderDelay = (int) Double.parseDouble(clipboardreaderdelayms.getText());
+		}
+		
 		if(e.getSource() == showdistancetoggle) {
 			if(GUI.ShowDistance) {
 				GUI.ShowDistance = false;
