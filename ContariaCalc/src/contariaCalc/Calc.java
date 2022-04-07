@@ -19,9 +19,29 @@ public class Calc {
 				double x1 = Double.parseDouble(firstcoords[0]);
 				double z1 = Double.parseDouble(firstcoords[1]);
 				double a1 = Double.parseDouble(firstcoords[2]);
-				double x2 = Double.parseDouble(secondcoords[0]);
-				double z2 = Double.parseDouble(secondcoords[1]);
-				double a2 = Double.parseDouble(secondcoords[2]);
+				double x2;
+				double z2;
+				double a2;
+				if(secondcoords[0].contains("+")) {
+					System.out.println("Check");
+					secondcoords[0].replaceAll("+-", "-");
+					System.out.println(secondcoords[0]);
+					x2 = x1 + Double.parseDouble(secondcoords[0]);
+				} else {
+					x2 = Double.parseDouble(secondcoords[0]);
+				}
+				if(secondcoords[1].contains("+")) {
+					secondcoords[1].replace("+", "");
+					z2 = z1 + Double.parseDouble(secondcoords[1]);
+				} else {
+					z2 = Double.parseDouble(secondcoords[1]);
+				}
+				if(secondcoords[2].contains("+")) {
+					secondcoords[2].replace("+", "");
+					a2 = a1 + Double.parseDouble(secondcoords[2]);
+				} else {
+					a2 = Double.parseDouble(secondcoords[2]);
+				}
 				
 				double a1_ = a1;
 				double a2_ = a2;

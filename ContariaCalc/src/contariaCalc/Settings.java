@@ -7,8 +7,12 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class Settings implements ActionListener {
+public class Settings implements ActionListener, ChangeListener {
 	
 	JFrame settings = new JFrame("Settings");
 	JPanel panel = new JPanel();
@@ -24,13 +28,20 @@ public class Settings implements ActionListener {
 	JButton showchunkcoordstoggle = new JButton("OFF");
 	JLabel alwaysontop = new JLabel("Always On Top:");
 	JButton alwaysontoptoggle = new JButton("ON");
+	JLabel autoclear = new JLabel("Autoclear:");
+	JButton autocleartoggle = new JButton("ON");
+	JLabel autoclearafter = new JLabel("Autoclear after           min");
+	JTextField autoclearmin = new JTextField(GUI.AutoclearAfter +  "");
+	JButton applyautoclearmin = new JButton("✔");
+	JLabel resize = new JLabel("Resize:");
+	JSlider resizing = new JSlider(JSlider.HORIZONTAL, 50, 200, GUI.m);
+	JButton resetsize = new JButton("Reset");
 	
 	public Settings() {
 		
 		int settingsnumber = 0;
 		int settingsgap = 30;
 		
-		settings.setSize(230, 230);
 		settings.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		settings.setAlwaysOnTop(true);
 		settings.setVisible(true);
@@ -92,6 +103,33 @@ public class Settings implements ActionListener {
 		panel.add(alwaysontoptoggle);
 		settingsnumber++;
 		
+		autoclear.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
+		panel.add(autoclear);
+		autocleartoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
+		if(GUI.Autoclear == false) {
+			autocleartoggle.setText("OFF");
+		}
+		panel.add(autocleartoggle);
+		settingsnumber++;
+		
+		autoclearafter.setBounds(10, 10 + settingsnumber * settingsgap, 250, 20);
+		panel.add(autoclearafter);
+		autoclearmin.setBounds(100, 10 + settingsnumber * settingsgap, 25, 20);
+		panel.add(autoclearmin);
+		applyautoclearmin.setBounds(156, 10 + settingsnumber * settingsgap, 44, 20);
+		panel.add(applyautoclearmin);
+		settingsnumber++;
+		
+		resize.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
+		panel.add(resize);
+		resizing.setBounds(50, 12 + settingsnumber * settingsgap, 80, 20);
+		panel.add(resizing);
+		resetsize.setBounds(130, 10 + settingsnumber * settingsgap, 70, 20);
+		panel.add(resetsize);
+		settingsnumber++;
+		
+
+		settings.setSize(230, 50 + settingsnumber * settingsgap);
 		
 		showdistancetoggle.addActionListener(this);
 		distancefromtoggle.addActionListener(this);
@@ -99,9 +137,23 @@ public class Settings implements ActionListener {
 		nethercoordsdecimalstoggle.addActionListener(this);
 		alwaysontoptoggle.addActionListener(this);
 		showchunkcoordstoggle.addActionListener(this);
+		autocleartoggle.addActionListener(this);
+		applyautoclearmin.addActionListener(this);
+		resetsize.addActionListener(this);
+		resizing.addChangeListener(this);
 		
 	}
 
+	
+	public void stateChanged(ChangeEvent e) {
+		
+		if(e.getSource() == resizing) {
+			GUI.m = resizing.getValue();
+			GUI.Resize(resizing.getValue());
+		}
+		
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -166,6 +218,27 @@ public class Settings implements ActionListener {
 				GUI.frame.setAlwaysOnTop(true);
 				settings.setAlwaysOnTop(true);
 			}
+		}
+		
+		if(e.getSource() == autocleartoggle) {
+			if(GUI.Autoclear == true) {
+				GUI.Autoclear = false;
+				autocleartoggle.setText("OFF");
+			}
+			else {
+				GUI.Autoclear = true;
+				autocleartoggle.setText("ON");
+			}
+		}
+		
+		if(e.getSource() == applyautoclearmin) {
+			GUI.AutoclearAfter = (int) Double.parseDouble(autoclearmin.getText());
+		}
+		
+		if(e.getSource() == resetsize) {
+			GUI.m = 100;
+			GUI.Resize(100);
+			resizing.setValue(100);
 		}
 		
 	}
