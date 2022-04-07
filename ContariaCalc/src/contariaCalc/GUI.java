@@ -12,6 +12,7 @@ public class GUI implements ActionListener {
 	
 	public static JFrame frame = new JFrame("ContariaCalc");
 	static JPanel panel = new JPanel();
+	static JButton hide = new JButton("...");
 	static JButton find = new JButton("Find");
 	static JButton settings = new JButton("Settings");
 	static JButton clear = new JButton("Clear");
@@ -37,10 +38,12 @@ public class GUI implements ActionListener {
 	public static boolean AlwaysOnTop = true ;
 	public static boolean Autoclear = false;
 	public static int AutoclearAfter = 15;
+	public static boolean HideWhenCleared;
 	public static int m = 100;
 	
 	static int extracoords = 0;
 	public static int numberofcalculations = 0;
+	public static boolean hidden = false;
 
 	public String[] firstcoords_split = firstcoords.getText().split(" ");
 	public String[] secondcoords_split = secondcoords.getText().split(" ");
@@ -55,6 +58,8 @@ public class GUI implements ActionListener {
 		frame.add(panel);
 		
 		panel.setLayout(null);
+		
+		panel.add(hide);
 		
 		panel.add(firstcoords);
 		panel.add(xza1);
@@ -87,6 +92,7 @@ public class GUI implements ActionListener {
 		find.addActionListener(this);
 		settings.addActionListener(this);
 		clear.addActionListener(this);
+		hide.addActionListener(this);
 		
 		}
 	
@@ -97,7 +103,14 @@ public class GUI implements ActionListener {
 			v = 100;
 		}
 		
-		frame.setSize(225*m/100, 185*m/100+extracoords*20);
+		if(hidden) {
+			frame.setSize(225*m/100, 30*m/100 + 45);
+		} 
+		else {
+			frame.setSize(225*m/100, 185*m/100);  
+		}
+		
+		hide.setBounds(10*m/100, 10*m/100, 20*m/100, 20*m/100);
 		
 		firstcoords.setBounds(45*m/100, 40*m/100, 150*m/100, 20*m/100);
 		xza1.setBounds(10*m/100, 40*m/100, 30*m/100, 20*m/100);
@@ -111,9 +124,9 @@ public class GUI implements ActionListener {
 		
 		sh.setBounds(10*m/100, 120*m/100, 90*m/100, 20*m/100);
 		
-		settings.setBounds(10*m/100, 10*m/100, 90*m/100, 20*m/100);
+		settings.setBounds(35*m/100, 10*m/100, 85*m/100, 20*m/100);
 		
-		clear.setBounds(110*m/100, 10*m/100, 90*m/100, 20*m/100);
+		clear.setBounds(125*m/100, 10*m/100, 75*m/100, 20*m/100);
 		
 		nethercoords.setBounds(10*m/100, 140*m/100, 100*m/100, 20*m/100);
 		nethercoords_.setBounds(v, 140*m/100, 100*m/100, 20*m/100);
@@ -129,19 +142,42 @@ public class GUI implements ActionListener {
 	}
 	
 	public static void Clear() {
+		
+		if(HideWhenCleared) {
+			if(hidden == false) {
+				Hide();
+			}
+		}
 
+		if(hidden) {
+			frame.setSize(225*m/100, 30*m/100 + 45);
+		} 
+		else {
+			frame.setSize(225*m/100, 185*m/100);  
+		}
+		
 		result.setText("");
 		firstcoords.setText("");
 		secondcoords.setText("");
 		distance1.setText("");
 		distance2.setText("");
-		frame.setSize(225*m/100, 185*m/100);
 		nethercoords.setVisible(false);
 		nethercoords_.setVisible(false);
 		chunkcoords.setVisible(false);
 		chunkcoords_.setVisible(false);
 		extracoords = 0;
 		numberofcalculations++;
+	}
+	
+	public static void Hide() {
+		if(hidden) {
+			frame.setSize(225*m/100, 185*m/100);
+			hidden = false;
+		} 
+		else {
+			frame.setSize(225*m/100, 30*m/100 + 45);
+			hidden = true;
+		}
 	}
 			
 
@@ -216,10 +252,11 @@ public class GUI implements ActionListener {
 			
 			if(Autoclear) {
 				new Thread() {
+					
 		            @Override
 		            public void run() {
 		                try {
-							new Autoclear(numberofcalculations, AutoclearAfter);
+		                	new Autoclear(numberofcalculations, AutoclearAfter);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -235,5 +272,9 @@ public class GUI implements ActionListener {
 		
 		if(e.getSource() == clear) {
 			GUI.Clear();
+		}
+		
+		if(e.getSource() == hide) {
+			Hide();
 		}
 	}}

@@ -17,7 +17,7 @@ public class Settings implements ActionListener, ChangeListener {
 	JFrame settings = new JFrame("Settings");
 	JPanel panel = new JPanel();
 	JLabel showdistance = new JLabel("Show Distance to SH:");
-	JButton showdistancetoggle = new JButton("ON");
+	JButton showdistancetoggle = new JButton("OFF");
 	JLabel distancefrom = new JLabel("Distance from:");
 	JButton distancefromtoggle = new JButton("1st Throw");
 	JLabel shownethercoords = new JLabel("Show Nether Coords:");
@@ -27,12 +27,14 @@ public class Settings implements ActionListener, ChangeListener {
 	JButton nethercoordsdecimalstoggle = new JButton("0");
 	JButton showchunkcoordstoggle = new JButton("OFF");
 	JLabel alwaysontop = new JLabel("Always On Top:");
-	JButton alwaysontoptoggle = new JButton("ON");
+	JButton alwaysontoptoggle = new JButton("OFF");
 	JLabel autoclear = new JLabel("Autoclear:");
-	JButton autocleartoggle = new JButton("ON");
+	JButton autocleartoggle = new JButton("OFF");
 	JLabel autoclearafter = new JLabel("Autoclear after           min");
 	JTextField autoclearmin = new JTextField(GUI.AutoclearAfter +  "");
 	JButton applyautoclearmin = new JButton("✔");
+	JLabel hidewhencleared = new JLabel("Hide when cleared:");
+	JButton hidewhenclearedtoggle = new JButton("OFF");
 	JLabel resize = new JLabel("Resize:");
 	JSlider resizing = new JSlider(JSlider.HORIZONTAL, 50, 200, GUI.m);
 	JButton resetsize = new JButton("Reset");
@@ -52,8 +54,8 @@ public class Settings implements ActionListener, ChangeListener {
 		showdistance.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
 		panel.add(showdistance);
 		showdistancetoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
-		if(GUI.ShowDistance == false) {
-			showdistancetoggle.setText("OFF");
+		if(GUI.ShowDistance) {
+			showdistancetoggle.setText("ON");
 		}
 		panel.add(showdistancetoggle);
 		settingsnumber++;
@@ -72,7 +74,7 @@ public class Settings implements ActionListener, ChangeListener {
 		shownethercoords.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
 		panel.add(shownethercoords);
 		shownethercoordstoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
-		if(GUI.ShowNetherCoords == true) {
+		if(GUI.ShowNetherCoords) {
 			shownethercoordstoggle.setText("ON");
 		}
 		panel.add(shownethercoordstoggle);
@@ -88,7 +90,7 @@ public class Settings implements ActionListener, ChangeListener {
 		showchunkcoords.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
 		panel.add(showchunkcoords);
 		showchunkcoordstoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
-		if(GUI.ShowChunkCoords == true) {
+		if(GUI.ShowChunkCoords) {
 			showchunkcoordstoggle.setText("ON");
 		}
 		panel.add(showchunkcoordstoggle);
@@ -97,8 +99,8 @@ public class Settings implements ActionListener, ChangeListener {
 		alwaysontop.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
 		panel.add(alwaysontop);
 		alwaysontoptoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
-		if(GUI.AlwaysOnTop == false) {
-			alwaysontoptoggle.setText("OFF");
+		if(GUI.AlwaysOnTop) {
+			alwaysontoptoggle.setText("ON");
 		}
 		panel.add(alwaysontoptoggle);
 		settingsnumber++;
@@ -106,8 +108,8 @@ public class Settings implements ActionListener, ChangeListener {
 		autoclear.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
 		panel.add(autoclear);
 		autocleartoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
-		if(GUI.Autoclear == false) {
-			autocleartoggle.setText("OFF");
+		if(GUI.Autoclear) {
+			autocleartoggle.setText("ON");
 		}
 		panel.add(autocleartoggle);
 		settingsnumber++;
@@ -120,6 +122,15 @@ public class Settings implements ActionListener, ChangeListener {
 		panel.add(applyautoclearmin);
 		settingsnumber++;
 		
+		hidewhencleared.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
+		panel.add(hidewhencleared);
+		hidewhenclearedtoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
+		if(GUI.HideWhenCleared) {
+			hidewhenclearedtoggle.setText("ON");
+		}
+		panel.add(hidewhenclearedtoggle);
+		settingsnumber++;
+		
 		resize.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
 		panel.add(resize);
 		resizing.setBounds(50, 12 + settingsnumber * settingsgap, 80, 20);
@@ -128,7 +139,6 @@ public class Settings implements ActionListener, ChangeListener {
 		panel.add(resetsize);
 		settingsnumber++;
 		
-
 		settings.setSize(230, 50 + settingsnumber * settingsgap);
 		
 		showdistancetoggle.addActionListener(this);
@@ -141,6 +151,7 @@ public class Settings implements ActionListener, ChangeListener {
 		applyautoclearmin.addActionListener(this);
 		resetsize.addActionListener(this);
 		resizing.addChangeListener(this);
+		hidewhenclearedtoggle.addActionListener(this);
 		
 	}
 
@@ -158,7 +169,7 @@ public class Settings implements ActionListener, ChangeListener {
 	public void actionPerformed(ActionEvent e) {
 
 		if(e.getSource() == showdistancetoggle) {
-			if(GUI.ShowDistance == true) {
+			if(GUI.ShowDistance) {
 				GUI.ShowDistance = false;
 				showdistancetoggle.setText("OFF");
 			}
@@ -178,7 +189,7 @@ public class Settings implements ActionListener, ChangeListener {
 		}
 		
 		if(e.getSource() == shownethercoordstoggle) {
-			if(GUI.ShowNetherCoords == true) {
+			if(GUI.ShowNetherCoords) {
 				GUI.ShowNetherCoords = false;
 				shownethercoordstoggle.setText("OFF");
 			}
@@ -195,7 +206,7 @@ public class Settings implements ActionListener, ChangeListener {
 		}
 		
 		if(e.getSource() == showchunkcoordstoggle) {
-			if(GUI.ShowChunkCoords == true) {
+			if(GUI.ShowChunkCoords) {
 				GUI.ShowChunkCoords = false;
 				showchunkcoordstoggle.setText("OFF");
 			}
@@ -206,7 +217,7 @@ public class Settings implements ActionListener, ChangeListener {
 		}
 		
 		if(e.getSource() == alwaysontoptoggle) {
-			if(GUI.AlwaysOnTop == true) {
+			if(GUI.AlwaysOnTop) {
 				GUI.AlwaysOnTop = false;
 				alwaysontoptoggle.setText("OFF");
 				GUI.frame.setAlwaysOnTop(false);
@@ -221,7 +232,7 @@ public class Settings implements ActionListener, ChangeListener {
 		}
 		
 		if(e.getSource() == autocleartoggle) {
-			if(GUI.Autoclear == true) {
+			if(GUI.Autoclear) {
 				GUI.Autoclear = false;
 				autocleartoggle.setText("OFF");
 			}
@@ -233,6 +244,17 @@ public class Settings implements ActionListener, ChangeListener {
 		
 		if(e.getSource() == applyautoclearmin) {
 			GUI.AutoclearAfter = (int) Double.parseDouble(autoclearmin.getText());
+		}
+		
+		if(e.getSource() == hidewhenclearedtoggle) {
+			if(GUI.HideWhenCleared) {
+				GUI.HideWhenCleared = false;
+				hidewhenclearedtoggle.setText("OFF");
+			}
+			else {
+				GUI.HideWhenCleared = true;
+				hidewhenclearedtoggle.setText("ON");
+			}
 		}
 		
 		if(e.getSource() == resetsize) {
