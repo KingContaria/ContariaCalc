@@ -8,9 +8,9 @@ import java.io.IOException;
 
 public class ClipboardReader {
 	
-	public ClipboardReader() {
+	public int p = 0;
 	
-	System.out.println("check");
+	public ClipboardReader() {
 
 	String data = null;
 	try {

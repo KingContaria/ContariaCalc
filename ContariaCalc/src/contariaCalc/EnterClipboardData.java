@@ -10,8 +10,22 @@ public class EnterClipboardData {
 				GUI.firstcoords.setText(data);
 			}
 			else {
-				GUI.secondcoords.setText(data);
-				GUI.Find();
+				if(GUI.secondcoords.getText().equals("")) {
+					GUI.secondcoords.setText(data);
+					GUI.Find();
+				}
+				else {
+					if(GUI.overwritefirst) {
+						GUI.firstcoords.setText(data);
+						GUI.Find();
+						GUI.overwritefirst = false;
+					}
+					else {
+						GUI.secondcoords.setText(data);
+						GUI.Find();
+						GUI.overwritefirst = true;
+					}
+				}
 			}
 		}
 	}

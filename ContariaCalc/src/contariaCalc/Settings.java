@@ -40,6 +40,8 @@ public class Settings implements ActionListener, ChangeListener {
 	JButton applyautoclearmin = new JButton("✔");
 	JLabel hidewhencleared = new JLabel("Hide when cleared:");
 	JButton hidewhenclearedtoggle = new JButton("OFF");
+	JLabel showcoordsonhidescreen = new JLabel("Result on Hide Screen:");
+	JButton showcoordsonhidescreentoggle = new JButton("No");
 	JLabel resize = new JLabel("Resize:");
 	JSlider resizing = new JSlider(JSlider.HORIZONTAL, 50, 200, GUI.m);
 	JButton resetsize = new JButton("Reset");
@@ -153,6 +155,16 @@ public class Settings implements ActionListener, ChangeListener {
 		panel.add(hidewhenclearedtoggle);
 		settingsnumber++;
 		
+		showcoordsonhidescreen.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
+		panel.add(showcoordsonhidescreen);
+		showcoordsonhidescreentoggle.setBounds(150, 10 + settingsnumber * settingsgap, 50, 20);
+		switch(GUI.ShowCoordsOnHideScreen) {
+		case 1: showcoordsonhidescreentoggle.setText("SH"); break;
+		case 2: showcoordsonhidescreentoggle.setText("All"); break;
+		}
+		panel.add(showcoordsonhidescreentoggle);
+		settingsnumber++;
+		
 		resize.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
 		panel.add(resize);
 		resizing.setBounds(50, 12 + settingsnumber * settingsgap, 80, 20);
@@ -173,9 +185,10 @@ public class Settings implements ActionListener, ChangeListener {
 		showchunkcoordstoggle.addActionListener(this);
 		autocleartoggle.addActionListener(this);
 		applyautoclearmin.addActionListener(this);
+		hidewhenclearedtoggle.addActionListener(this);
+		showcoordsonhidescreentoggle.addActionListener(this);
 		resetsize.addActionListener(this);
 		resizing.addChangeListener(this);
-		hidewhenclearedtoggle.addActionListener(this);
 		
 	}
 
@@ -298,6 +311,15 @@ public class Settings implements ActionListener, ChangeListener {
 			else {
 				GUI.HideWhenCleared = true;
 				hidewhenclearedtoggle.setText("ON");
+			}
+		}
+		
+		if(e.getSource() == showcoordsonhidescreentoggle) {
+			GUI.ShowCoordsOnHideScreen = (GUI.ShowCoordsOnHideScreen + 1) % 3;
+			switch(GUI.ShowCoordsOnHideScreen) {
+			case 0: showcoordsonhidescreentoggle.setText("No"); break;
+			case 1: showcoordsonhidescreentoggle.setText("SH"); break;
+			case 2: showcoordsonhidescreentoggle.setText("All"); break;
 			}
 		}
 		
