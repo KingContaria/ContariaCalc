@@ -2,6 +2,7 @@ package contariaCalc;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.regex.Pattern;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -379,9 +380,17 @@ public class Settings implements ActionListener, ChangeListener {
 		}
 		
 		if(e.getSource() == applysettextfont) {
-			GUI.textfont = settextfont.getText();
+			String settextfontsplit[] = settextfont.getText().split(Pattern.quote("*"));
+			GUI.textfont = settextfontsplit[0];
+			if(settextfontsplit.length == 2) {
+				GUI.textsizer = (int) (Double.parseDouble(settextfontsplit[1]) * 100);
+			}
+			else {
+				GUI.textsizer = 100;
+			}
 			GUI.Resize(GUI.m);
 			GUI.pref.put("textfont", GUI.textfont);
+			GUI.pref.putDouble("textsizer", GUI.textsizer);
 		}
 		
 		if(e.getSource() == resetsize) {

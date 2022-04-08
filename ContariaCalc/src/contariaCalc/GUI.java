@@ -58,6 +58,7 @@ public class GUI implements ActionListener {
 	public static int m = 100;
 	public static int c = 255;
 	public static String textfont = "Arial";
+	public static int textsizer = 100;
 	
 	//Processing variables for functions
 	static int extracoords = 0;
@@ -163,6 +164,7 @@ public class GUI implements ActionListener {
 		m = pref.getInt("m", m);
 		c = pref.getInt("c", c);
 		textfont = pref.get("textfont", textfont);
+		textsizer = pref.getInt("textsizer", textsizer);
 		
 	}
 	
@@ -180,7 +182,7 @@ public class GUI implements ActionListener {
 			frame.setSize(210*m/100, (165+extracoords*20)*m/100);  
 		}
 		
-		Font font = new Font(textfont + "", Font.BOLD, 12*m/100);
+		Font font = new Font(textfont + "", Font.BOLD, 12*m/100*textsizer/100);
 
 		close.setBounds((185*m/100+framex_extra), 0, 25*m/100, 25*m/100);
 		close.setFont(font);
