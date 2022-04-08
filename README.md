@@ -49,3 +49,25 @@ Autoclear after __ min - Sets the duration for the timer, write the number of mi
 Hide when cleared - If this is enabled, the Hide Function will automatically be activated when the Calculator gets cleared.
 
 Resize - Use this to resize your calculator if it is too small/big. The 'Reset' button will set it back to its original size.
+
+Color - Use this to change the color of your GUI.
+
+
+Other Features:
+
+
+Adding to your first throw - Instead of fully typing out the second throw coordinates and angle, you can also put a '+' in front of your number, that way it will add this number to the according variable from your first eyethrow. Example...
+
+...
+
+First Input: 100 200 49.5
+
+Second Input: +50 180 +-2.3
+
+means
+
+Second Input: 150 180 47.2
+
+
+Overwriting Eyethrows with ClipbaordReader - 3rd Clipboard throw overwrites first one, 4th overwrites second, etc...
+
