@@ -10,6 +10,8 @@ After throwing an eye, point your crosshair at the eye of ender, then fill your 
 
 Now turn 90°, run for a bit and then repeat this process for a second eyethrow and fill in the values into the second Textfield.
 
+I would advise travelling at least 50 blocks between eyethrows, 100 to be sure or when you are outside of the stronghold ring.
+
 Now click the 'Find' Button and the calculator will output the coordinates of the stronghold. Depending on the distance between eyethrow, the distance of the stronghold and your accuracy when taking the angle those coordinates might not be exact.
 
 
