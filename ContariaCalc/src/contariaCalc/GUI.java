@@ -56,6 +56,7 @@ public class GUI implements ActionListener {
 	public static int c = 255;
 	
 	static int extracoords = 0;
+	static int framex_extra = 0;
 	public static int numberofcalculations = 0;
 	public static boolean hidden = false;
 	public static boolean overwritefirst = true;
@@ -141,11 +142,11 @@ public class GUI implements ActionListener {
 			frame.setSize(210*m/100, (165+extracoords*20)*m/100);  
 		}
 
-		close.setBounds(185*m/100, 0, 25*m/100, 25*m/100);
+		close.setBounds((185*m/100+framex_extra), 0, 25*m/100, 25*m/100);
 		close.setFont(new Font("Arial", Font.BOLD, 12*m/100));
-		minimize.setBounds(160*m/100, 0, 25*m/100, 25*m/100);
+		minimize.setBounds((160+framex_extra)*m/100, 0, 25*m/100, 25*m/100);
 		minimize.setFont(new Font("Arial", Font.BOLD, 12*m/100));
-		topbar.setBounds(10*m/100, 0, 160*m/100, 25*m/100);
+		topbar.setBounds(10*m/100, 0, 185*m/100, 25*m/100);
 		topbar2.setBounds(0, 0, 10*m/100, 25*m/100);
 		topbar.setFont(new Font("Arial", Font.BOLD, 12*m/100));
 		
@@ -254,18 +255,15 @@ public class GUI implements ActionListener {
 	
 	public static void Clear() {
 		
-		if(HideWhenCleared) {
-			if(hidden == false) {
-				Hide();
-			}
-		}
-
 		if(hidden) {
-			frame.setSize(225*m/100, 30*m/100 + 45);
+			frame.setSize(210*m/100, 50*m/100 + 5);
 		} 
 		else {
-			frame.setSize(225*m/100, 185*m/100);  
+			frame.setSize(210*m/100, 165*m/100);  
 		}
+
+		close.setBounds(185*m/100, 0, 25*m/100, 25*m/100);
+		minimize.setBounds(160*m/100, 0, 25*m/100, 25*m/100);
 		
 		result.setText("");
 		firstcoords.setText("");
@@ -277,7 +275,15 @@ public class GUI implements ActionListener {
 		chunkcoords.setVisible(false);
 		chunkcoords_.setVisible(false);
 		extracoords = 0;
+		framex_extra = 0;
 		numberofcalculations++;
+		
+		if(HideWhenCleared) {
+			if(hidden == false) {
+				Hide();
+			}
+		}
+		
 	}
 	
 	public static void Hide() {
@@ -288,14 +294,19 @@ public class GUI implements ActionListener {
 			firstcoords.setVisible(true);
 			secondcoords.setVisible(true);
 			find.setVisible(true);
+			distance1.setVisible(true);
+			distance2.setVisible(true);
 			Resize(m);
+			frame.setSize((210+framex_extra)*m/100, (165+extracoords*20)*m/100);
 		} 
 		else {
-			frame.setSize(210*m/100, 10*m/100 + 45);
+			frame.setSize(210*m/100, 50*m/100 + 5);
+			close.setBounds(185*m/100, 0, 25*m/100, 25*m/100);
+			minimize.setBounds(160*m/100, 0, 25*m/100, 25*m/100);
 			hidden = true;
-			if(result.getText().split(" ").length > 2) {
+			if(result.getText().split(" ").length > 1) {
 				if(ShowCoordsOnHideScreen > 0) {
-					frame.setSize(210*m/100, (35+20*extracoords*(ShowCoordsOnHideScreen-1))*m/100 + 45);
+					frame.setSize(210*m/100, ((75+20*extracoords*(ShowCoordsOnHideScreen-1))*m/100) + 5);
 					sh.setBounds(10*m/100, 55*m/100, 90*m/100, 20*m/100);
 					int v = 90 * m/100;
 					if(v < 90) {
@@ -305,15 +316,17 @@ public class GUI implements ActionListener {
 					if(v < 100) {
 						v = 100;
 					}
-					nethercoords.setBounds(10*m/100, 55*m/100, 100*m/100, 20*m/100);
-					nethercoords_.setBounds(v, 55*m/100, 100*m/100, 20*m/100);
-					chunkcoords.setBounds(10*m/100, (55+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
-					chunkcoords_.setBounds(v, (55+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
+					nethercoords.setBounds(10*m/100, 75*m/100, 100*m/100, 20*m/100);
+					nethercoords_.setBounds(v, 75*m/100, 100*m/100, 20*m/100);
+					chunkcoords.setBounds(10*m/100, (75+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
+					chunkcoords_.setBounds(v, (75+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
 					xza1.setVisible(false);
 					xza2.setVisible(false);
 					firstcoords.setVisible(false);
 					secondcoords.setVisible(false);
 					find.setVisible(false);
+					distance1.setVisible(false);
+					distance2.setVisible(false);
 				}
 			}
 		}
@@ -329,8 +342,8 @@ public class GUI implements ActionListener {
 		else {
 		String[] sh_coordssplit = sh_coordsraw.split(" / ");
 		String sh_coords = sh_coordssplit[0];
-		frame.setSize(225*m/100, 185*m/100);
-		int framex_extra = 0;
+		frame.setSize(210*m/100, 165*m/100);
+		framex_extra = 0;
 		nethercoords.setVisible(false);
 		nethercoords_.setVisible(false);
 		chunkcoords.setVisible(false);
@@ -341,7 +354,9 @@ public class GUI implements ActionListener {
 			case 1: sh_coords = sh_coords + "   (D: " + Distance.DistanceCalc(secondcoords.getText(), sh_coords) + ")"; break;
 			case 2: distance1.setText("D: " + Distance.DistanceCalc(firstcoords.getText(), sh_coords));
 					distance2.setText("D: " + Distance.DistanceCalc(secondcoords.getText(), sh_coords));
-					frame.setSize(245*m/100, 185*m/100);
+					frame.setSize(245*m/100, 165*m/100);
+					close.setBounds(220*m/100, 0, 25*m/100, 25*m/100);
+					minimize.setBounds(195*m/100, 0, 25*m/100, 25*m/100);
 					framex_extra = 35;
 		}}
 		
@@ -353,9 +368,9 @@ public class GUI implements ActionListener {
 		extracoords = 0;
 		
 		if(ShowNetherCoords) {
-			frame.setSize((210+framex_extra)*m/100, 205*m/100);
+			frame.setSize((210+framex_extra)*m/100, 185*m/100);
 			nethercoords_.setText(sh_coordssplit[1]);
-			nethercoords_.setBounds(v, 140*m/100, 100*m/100, 20*m/100);
+			nethercoords_.setBounds(v, 160*m/100, 100*m/100, 20*m/100);
 			nethercoords.setVisible(true);
 			nethercoords_.setVisible(true);
 			extracoords++;
@@ -363,9 +378,9 @@ public class GUI implements ActionListener {
 		
 		if(ShowChunkCoords) {
 			
-			frame.setSize((210+framex_extra)*m/100, (205+extracoords*20)*m/100);
-			chunkcoords.setBounds(10*m/100, (140+extracoords*20)*m/100, 100*m/100, 20*m/100);
-			chunkcoords_.setBounds(v, (140+extracoords*20)*m/100, 100*m/100, 20*m/100);
+			frame.setSize((210+framex_extra)*m/100, (185+extracoords*20)*m/100);
+			chunkcoords.setBounds(10*m/100, (160+extracoords*20)*m/100, 100*m/100, 20*m/100);
+			chunkcoords_.setBounds(v, (160+extracoords*20)*m/100, 100*m/100, 20*m/100);
 			chunkcoords_.setText(sh_coordssplit[2]);
 			chunkcoords.setVisible(true);
 			chunkcoords_.setVisible(true);
