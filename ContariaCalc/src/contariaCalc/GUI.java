@@ -83,14 +83,17 @@ public class GUI implements ActionListener {
         }.start();
 		}
 		Resize(m);
-		System.out.println(textsizer);
+		SetColor(c);
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
-		frame.setAlwaysOnTop(true);
+		frame.setAlwaysOnTop(AlwaysOnTop);
 		frame.setVisible(true);
 		frame.add(panel);
-		frame.setBackground(Color.gray);
+
+		if(Translucent) {
+			frame.setOpacity(0.6f);
+		}
 		
 		panel.setLayout(null);
 		
@@ -102,10 +105,7 @@ public class GUI implements ActionListener {
 		close.setBorder(emptyBorder);
 		minimize.setBorder(emptyBorder);
 		close.setBackground(new Color(220, 0, 0, 255));
-		minimize.setBackground(Color.lightGray);
-		topbar.setBackground(Color.lightGray);
 		topbar.setOpaque(true);
-		topbar2.setBackground(Color.lightGray);
 		topbar2.setOpaque(true);
 
 		panel.add(settings);
@@ -171,25 +171,32 @@ public class GUI implements ActionListener {
 	
 	public static void Resize(int m) {
 		
-		int v = 90 * m/100;
-		if(v < 100) {
-			v = 100;
-		}
+		int changeextracoordspos = 0;
+		int framexextra_m = 1;
 		
 		if(hidden) {
-			frame.setSize(210*m/100, 30*m/100 + 45);
+			int extra = 0;
+			if(DistanceFrom == 1) {
+				extra = 20;
+			}
+			if(DistanceFrom == 2) {
+				extra = 25 + extracoords*20;
+			}
+			frame.setSize(210*m/100, (50+extra)*m/100 + 5);
+			framexextra_m = 0;
+			changeextracoordspos = 85;
 		} 
 		else {
-			frame.setSize(210*m/100, (165+extracoords*20)*m/100);  
+			frame.setSize((210+framex_extra)*m/100, (165+extracoords*20)*m/100); 
 		}
 		
 		Font font = new Font(textfont + "", Font.BOLD, 12*m/100*textsizer/100);
 
-		close.setBounds((185*m/100+framex_extra), 0, 25*m/100, 25*m/100);
+		close.setBounds(((185+framex_extra*framexextra_m)*m/100), 0, 25*m/100, 25*m/100);
 		close.setFont(font);
-		minimize.setBounds((160+framex_extra)*m/100, 0, 25*m/100, 25*m/100);
+		minimize.setBounds((160+framex_extra*framexextra_m)*m/100, 0, 25*m/100, 25*m/100);
 		minimize.setFont(font);
-		topbar.setBounds(10*m/100, 0, 151*m/100, 25*m/100);
+		topbar.setBounds(10*m/100, 0, (151+framex_extra*framexextra_m)*m/100, 25*m/100);
 		topbar2.setBounds(0, 0, 10*m/100, 25*m/100);
 		topbar.setFont(font);
 		
@@ -215,24 +222,20 @@ public class GUI implements ActionListener {
 		find.setBounds(70*m/100, 112*m/100, 70*m/100, 25*m/100);
 		find.setFont(font);
 		
-		sh.setBounds(10*m/100, 140*m/100, 90*m/100, 20*m/100);
+		sh.setBounds(10*m/100, (140-changeextracoordspos)*m/100, 90*m/100, 20*m/100);
 		sh.setFont(font);
 		
-		nethercoords.setBounds(10*m/100, 160*m/100, 100*m/100, 20*m/100);
+		nethercoords.setBounds(10*m/100, (160-changeextracoordspos)*m/100, 100*m/100, 20*m/100);
 		nethercoords.setFont(font);
-		nethercoords_.setBounds(v, 160*m/100, 100*m/100, 20*m/100);
+		nethercoords_.setBounds(100 * m/100, (160-changeextracoordspos)*m/100, 100*m/100, 20*m/100);
 		nethercoords_.setFont(font);
 		
-		chunkcoords.setBounds(10*m/100, (160+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
+		chunkcoords.setBounds(10*m/100, (160-changeextracoordspos+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
 		chunkcoords.setFont(font);
-		chunkcoords_.setBounds(v, (160+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
+		chunkcoords_.setBounds(100 * m/100, (160-changeextracoordspos+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
 		chunkcoords_.setFont(font);
 		
-		v = 90 * m/100;
-		if(v < 90) {
-			v = 90;
-		}
-		result.setBounds(v, 140*m/100, 150*m/100, 20*m/100);
+		result.setBounds(100 * m/100, (140-changeextracoordspos)*m/100, 150*m/100, 20*m/100);
 		result.setFont(font);
 	}
 	
@@ -240,27 +243,20 @@ public class GUI implements ActionListener {
 		
 		int paneltone = tone - 50;
 		int titlebartone = paneltone - 40;
-		int texttone = 255-paneltone;
-		if(220 > texttone) {
-			if(texttone > 35) {
-				if(texttone > 150) {
-					texttone = 220;
-				}
-				else {
-					texttone = 35;
-				}
-			}
+		int texttone;
+		if(paneltone > 105) {
+			texttone = 35;
 		}
-		int buttonnametone = 255-tone;
-		if(230 > buttonnametone) {
-			if(buttonnametone > 35) {
-				if(buttonnametone > 140) {
-					buttonnametone = 230;
-				}
-				else {
-					buttonnametone = 35;
-				}
-			}
+		else {
+			texttone = 220;
+		}
+
+		int buttonnametone;
+		if(tone > 105) {
+			buttonnametone = 35;
+		}
+		else {
+			buttonnametone = 220;
 		}
 		
 		Color buttons = new Color(tone, tone, tone, 255);
@@ -343,39 +339,24 @@ public class GUI implements ActionListener {
 		find.setVisible(hidden);
 		distance1.setVisible(hidden);
 		distance2.setVisible(hidden);
+		hidden = !hidden;
+		Resize(m);
 		if(hidden) {
-			Resize(m);
-			frame.setSize((210+framex_extra)*m/100, (165+extracoords*20)*m/100);
-		} 
-		else {
 			frame.setSize(210*m/100, 50*m/100 + 5);
 			close.setBounds(185*m/100, 0, 25*m/100, 25*m/100);
 			minimize.setBounds(160*m/100, 0, 25*m/100, 25*m/100);
-			if(result.getText().split(" ").length > 1) {
 				if(ShowCoordsOnHideScreen > 0) {
 					frame.setSize(210*m/100, ((75+20*extracoords*(ShowCoordsOnHideScreen-1))*m/100) + 5);
-					sh.setBounds(10*m/100, 55*m/100, 90*m/100, 20*m/100);
-					int v = 90 * m/100;
-					if(v < 90) {
-						v = 90;
-					}
-					result.setBounds(v, 55*m/100, 150*m/100, 20*m/100);
-					if(v < 100) {
-						v = 100;
-					}
-					nethercoords.setBounds(10*m/100, 75*m/100, 100*m/100, 20*m/100);
-					nethercoords_.setBounds(v, 75*m/100, 100*m/100, 20*m/100);
-					chunkcoords.setBounds(10*m/100, (75+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
-					chunkcoords_.setBounds(v, (75+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
-				}
 			}
+		} 
+		else {
+			frame.setSize((210+framex_extra)*m/100, (165+extracoords*20)*m/100);
 		}
-
-		hidden = !hidden;
 	}
 	
 	public static void Find() {
-		
+
+		framex_extra = 0;
 		numberofcalculations++;
 		String sh_coordsraw = Calc.calculation(firstcoords.getText(), secondcoords.getText(), ShowNetherCoords, NetherCoordsDecimals, ShowChunkCoords);
 		if(sh_coordsraw.equals("Error")) {
@@ -384,66 +365,50 @@ public class GUI implements ActionListener {
 		else {
 		String[] sh_coordssplit = sh_coordsraw.split(" / ");
 		String sh_coords = sh_coordssplit[0];
-		frame.setSize(210*m/100, 165*m/100);
-		framex_extra = 0;
-		nethercoords.setVisible(false);
-		nethercoords_.setVisible(false);
-		chunkcoords.setVisible(false);
-		chunkcoords_.setVisible(false);
+		distance1.setText("");
+		distance2.setText("");
+		nethercoords.setVisible(ShowNetherCoords);
+		nethercoords_.setVisible(ShowNetherCoords);
+		chunkcoords.setVisible(ShowChunkCoords);
+		chunkcoords_.setVisible(ShowChunkCoords);
 		if(ShowDistance) {
 			switch(DistanceFrom) {
 			case 0:	sh_coords = sh_coords + "   (D: " + Distance.DistanceCalc(firstcoords.getText(), sh_coords) + ")"; break;
 			case 1: sh_coords = sh_coords + "   (D: " + Distance.DistanceCalc(secondcoords.getText(), sh_coords) + ")"; break;
 			case 2: distance1.setText("D: " + Distance.DistanceCalc(firstcoords.getText(), sh_coords));
 					distance2.setText("D: " + Distance.DistanceCalc(secondcoords.getText(), sh_coords));
-					frame.setSize(245*m/100, 165*m/100);
-					close.setBounds(220*m/100, 0, 25*m/100, 25*m/100);
-					minimize.setBounds(195*m/100, 0, 25*m/100, 25*m/100);
 					framex_extra = 35;
-		}}
-		
-		int v = 90 * m/100;
-		if(v < 100) {
-			v = 100;
+			}
 		}
 		
 		extracoords = 0;
 		
 		if(ShowNetherCoords) {
-			frame.setSize((210+framex_extra)*m/100, 185*m/100);
 			nethercoords_.setText(sh_coordssplit[1]);
-			nethercoords_.setBounds(v, 160*m/100, 100*m/100, 20*m/100);
-			nethercoords.setVisible(true);
-			nethercoords_.setVisible(true);
 			extracoords++;
 		}
 		
 		if(ShowChunkCoords) {
-			
-			frame.setSize((210+framex_extra)*m/100, (185+extracoords*20)*m/100);
 			chunkcoords.setBounds(10*m/100, (160+extracoords*20)*m/100, 100*m/100, 20*m/100);
-			chunkcoords_.setBounds(v, (160+extracoords*20)*m/100, 100*m/100, 20*m/100);
 			chunkcoords_.setText(sh_coordssplit[2]);
-			chunkcoords.setVisible(true);
-			chunkcoords_.setVisible(true);
 			extracoords++;
 		}
+		
+		frame.setSize((210+framex_extra)*m/100, (165+extracoords*20)*m/100);
 		
 		if(CoordsOverlay == true) {
 			new CoordsOverlay(sh_coords);
 		}
 		
-		v = 90 * m/100;
-		if(v < 90) {
-			v = 90;
-		}
-		result.setBounds(v, 140*m/100, 150*m/100, 20*m/100);
 		result.setText(sh_coords);
 		
 		if(hidden) {
 			hidden = false;
 			Hide();
 		}
+		
+		Resize(m);
+		
 		}
 		
 		if(Autoclear) {
