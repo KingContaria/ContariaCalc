@@ -390,7 +390,7 @@ public class Settings implements ActionListener, ChangeListener {
 			}
 			GUI.Resize(GUI.m);
 			GUI.pref.put("textfont", GUI.textfont);
-			GUI.pref.putDouble("textsizer", GUI.textsizer);
+			GUI.pref.putInt("textsizer", GUI.textsizer);
 		}
 		
 		if(e.getSource() == resetsize) {

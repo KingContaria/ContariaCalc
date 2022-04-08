@@ -83,6 +83,7 @@ public class GUI implements ActionListener {
         }.start();
 		}
 		Resize(m);
+		System.out.println(textsizer);
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
