@@ -42,11 +42,15 @@ Show Chunk Coords - This will create an additional field below the stronghold co
 
 Always On Top - If this is enabled, the window will always stay on top, even when other windows are selected (for example Minecraft).
 
+Translucent - If this is enabled, the window will get translucent.
+
 Autoclear - If this is enabled, after you press 'Find' a timer will start after which the Calculator will automatically get cleared. The timer will start over if you press 'Find' and get cancelled if you press 'Clear'.
 
 Autoclear after __ min - Sets the duration for the timer, write the number of minutes into the Textfield and then press ✓.
 
 Hide when cleared - If this is enabled, the Hide Function will automatically be activated when the Calculator gets cleared.
+
+Text Font - Enter the Name of the Text Font you want your text to be hear and then press ✓.
 
 Resize - Use this to resize your calculator if it is too small/big. The 'Reset' button will set it back to its original size.
 
