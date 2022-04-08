@@ -8,6 +8,7 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class MotionPanel extends JPanel{
     private Point initialClick;
     public MotionPanel(final JFrame parent){
