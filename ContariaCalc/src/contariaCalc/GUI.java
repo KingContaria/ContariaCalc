@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.prefs.Preferences;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -20,7 +21,7 @@ public class GUI implements ActionListener {
 	static JPanel panel = new MotionPanel(frame);
 	static JButton close = new JButton("X");
 	static JButton minimize = new JButton("_");
-	static JLabel topbar = new JLabel("ContariaCalc v1.1.1");
+	static JLabel topbar = new JLabel("ContariaCalc v1.1.2");
 	static JLabel topbar2 = new JLabel();
 	static JButton hide = new JButton("...");
 	static JButton find = new JButton("Find");
@@ -39,6 +40,7 @@ public class GUI implements ActionListener {
 	static JTextField firstcoords = new JTextField("");
 	static JTextField secondcoords = new JTextField("");
 	
+	//Options
 	public static boolean CoordsOverlay = false;
 	public static boolean ClipboardReader = false;
 	public static int ClipboardreaderDelay = 1000;
@@ -48,13 +50,16 @@ public class GUI implements ActionListener {
 	public static int NetherCoordsDecimals = 0;
 	public static boolean ShowChunkCoords = false;
 	public static boolean AlwaysOnTop = true ;
+	public static boolean Translucent = false;
 	public static boolean Autoclear = false;
 	public static int AutoclearAfter = 15;
-	public static boolean HideWhenCleared;
+	public static boolean HideWhenCleared = false;
 	public static int ShowCoordsOnHideScreen = 0;
 	public static int m = 100;
 	public static int c = 255;
+	public static String textfont = "Arial";
 	
+	//Processing variables for functions
 	static int extracoords = 0;
 	static int framex_extra = 0;
 	public static int numberofcalculations = 0;
@@ -64,8 +69,18 @@ public class GUI implements ActionListener {
 	public String[] firstcoords_split = firstcoords.getText().split(" ");
 	public String[] secondcoords_split = secondcoords.getText().split(" ");
 	
+	static Preferences pref = Preferences.userNodeForPackage(GUI.class);
+	
 	public GUI() {
 		
+		GetPreferences();
+		if(ClipboardReader) {
+			new Thread() {
+            public void run() {
+                new ClipboardReader();
+            }
+        }.start();
+		}
 		Resize(m);
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -126,7 +141,30 @@ public class GUI implements ActionListener {
 		close.addActionListener(this);
 		minimize.addActionListener(this);
 		
+		GetPreferences();
+			
 		}
+	
+	public static void GetPreferences() {
+
+		ClipboardReader = pref.getBoolean("ClipboardReader", ClipboardReader);
+		ClipboardreaderDelay = pref.getInt("ClipboardreaderDelay", ClipboardreaderDelay);
+		ShowDistance = pref.getBoolean("ShowDistance", ShowDistance);;
+		DistanceFrom = pref.getInt("DistanceFrom", DistanceFrom);
+		ShowNetherCoords = pref.getBoolean("ShowNetherCoords", ShowNetherCoords);;;
+		NetherCoordsDecimals = pref.getInt("NetherCoordsDecimals", NetherCoordsDecimals);
+		ShowChunkCoords = pref.getBoolean("ShowChunkCoords", ShowChunkCoords);;;
+		AlwaysOnTop = pref.getBoolean("AlwaysOnTop", AlwaysOnTop);; ;
+		Translucent = pref.getBoolean("Translucent", Translucent);;;
+		Autoclear = pref.getBoolean("Autoclear", Autoclear);;;
+		AutoclearAfter = pref.getInt("AutoclearAfter", AutoclearAfter);
+		HideWhenCleared = pref.getBoolean("HideWhenCleared", HideWhenCleared);;;
+		ShowCoordsOnHideScreen = pref.getInt("ShowCoordsOnHideScreen", ShowCoordsOnHideScreen);
+		m = pref.getInt("m", m);
+		c = pref.getInt("c", c);
+		textfont = pref.get("textfont", textfont);
+		
+	}
 	
 	public static void Resize(int m) {
 		
@@ -141,56 +179,58 @@ public class GUI implements ActionListener {
 		else {
 			frame.setSize(210*m/100, (165+extracoords*20)*m/100);  
 		}
+		
+		Font font = new Font(textfont + "", Font.BOLD, 12*m/100);
 
 		close.setBounds((185*m/100+framex_extra), 0, 25*m/100, 25*m/100);
-		close.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		close.setFont(font);
 		minimize.setBounds((160+framex_extra)*m/100, 0, 25*m/100, 25*m/100);
-		minimize.setFont(new Font("Arial", Font.BOLD, 12*m/100));
-		topbar.setBounds(10*m/100, 0, 185*m/100, 25*m/100);
+		minimize.setFont(font);
+		topbar.setBounds(10*m/100, 0, 151*m/100, 25*m/100);
 		topbar2.setBounds(0, 0, 10*m/100, 25*m/100);
-		topbar.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		topbar.setFont(font);
 		
 		settings.setBounds(35*m/100, 30*m/100, 85*m/100, 20*m/100);
-		settings.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		settings.setFont(font);
 		clear.setBounds(125*m/100, 30*m/100, 75*m/100, 20*m/100);
-		clear.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		clear.setFont(font);
 		hide.setBounds(10*m/100, 30*m/100, 20*m/100, 20*m/100);
-		hide.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		hide.setFont(font);
 		
 		firstcoords.setBounds(45*m/100, 60*m/100, 150*m/100, 20*m/100);
 		xza1.setBounds(10*m/100, 60*m/100, 30*m/100, 20*m/100);
-		xza1.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		xza1.setFont(font);
 		distance1.setBounds(200*m/100, 60*m/100, 50*m/100, 20*m/100);
-		distance1.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		distance1.setFont(font);
 			
 		secondcoords.setBounds(45*m/100, 85*m/100, 150*m/100, 20*m/100);
 		xza2.setBounds(10*m/100, 85*m/100, 30*m/100, 20*m/100);
-		xza2.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		xza2.setFont(font);
 		distance2.setBounds(200*m/100, 85*m/100, 50*m/100, 20*m/100);
-		distance2.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		distance2.setFont(font);
 		
 		find.setBounds(70*m/100, 112*m/100, 70*m/100, 25*m/100);
-		find.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		find.setFont(font);
 		
 		sh.setBounds(10*m/100, 140*m/100, 90*m/100, 20*m/100);
-		sh.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		sh.setFont(font);
 		
 		nethercoords.setBounds(10*m/100, 160*m/100, 100*m/100, 20*m/100);
-		nethercoords.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		nethercoords.setFont(font);
 		nethercoords_.setBounds(v, 160*m/100, 100*m/100, 20*m/100);
-		nethercoords_.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		nethercoords_.setFont(font);
 		
 		chunkcoords.setBounds(10*m/100, (160+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
-		chunkcoords.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		chunkcoords.setFont(font);
 		chunkcoords_.setBounds(v, (160+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
-		chunkcoords_.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		chunkcoords_.setFont(font);
 		
 		v = 90 * m/100;
 		if(v < 90) {
 			v = 90;
 		}
 		result.setBounds(v, 140*m/100, 150*m/100, 20*m/100);
-		result.setFont(new Font("Arial", Font.BOLD, 12*m/100));
+		result.setFont(font);
 	}
 	
 	public static void SetColor(int tone) {
@@ -220,36 +260,41 @@ public class GUI implements ActionListener {
 			}
 		}
 		
+		Color buttons = new Color(tone, tone, tone, 255);
+		Color text = new Color(texttone, texttone, texttone, 255);
+		Color buttontext = new Color(buttonnametone, buttonnametone, buttonnametone, 255);
+		Color titlebar = new Color(titlebartone, titlebartone, titlebartone, 255);
+		
 		panel.setBackground(new Color(paneltone, paneltone, paneltone, 255));
 		
-		hide.setBackground(new Color(tone, tone, tone, 255));
-		settings.setBackground(new Color(tone, tone, tone, 255));
-		clear.setBackground(new Color(tone, tone, tone, 255));
-		hide.setBackground(new Color(tone, tone, tone, 255));
-		firstcoords.setBackground(new Color(tone, tone, tone, 255));
-		secondcoords.setBackground(new Color(tone, tone, tone, 255));
-		find.setBackground(new Color(tone, tone, tone, 255));
-		sh.setForeground(new Color(texttone, texttone, texttone, 255));
-		xza1.setForeground(new Color(texttone, texttone, texttone, 255));
-		xza2.setForeground(new Color(texttone, texttone, texttone, 255));
-		result.setForeground(new Color(texttone, texttone, texttone, 255));
-		distance1.setForeground(new Color(texttone, texttone, texttone, 255));
-		distance2.setForeground(new Color(texttone, texttone, texttone, 255));
-		nethercoords.setForeground(new Color(texttone, texttone, texttone, 255));
-		nethercoords_.setForeground(new Color(texttone, texttone, texttone, 255));
-		chunkcoords.setForeground(new Color(texttone, texttone, texttone, 255));
-		chunkcoords_.setForeground(new Color(texttone, texttone, texttone, 255));
-		topbar.setForeground(new Color(texttone, texttone, texttone, 255));
-		minimize.setForeground(new Color(texttone, texttone, texttone, 255));
-		hide.setForeground(new Color(buttonnametone, buttonnametone, buttonnametone, 255));
-		settings.setForeground(new Color(buttonnametone, buttonnametone, buttonnametone, 255));
-		clear.setForeground(new Color(buttonnametone, buttonnametone, buttonnametone, 255));
-		find.setForeground(new Color(buttonnametone, buttonnametone, buttonnametone, 255));
-		firstcoords.setForeground(new Color(buttonnametone, buttonnametone, buttonnametone, 255));
-		secondcoords.setForeground(new Color(buttonnametone, buttonnametone, buttonnametone, 255));
-		minimize.setBackground(new Color(titlebartone, titlebartone, titlebartone, 255));
-		topbar.setBackground(new Color(titlebartone, titlebartone, titlebartone, 255));
-		topbar2.setBackground(new Color(titlebartone, titlebartone, titlebartone, 255));
+		hide.setBackground(buttons);
+		settings.setBackground(buttons);
+		clear.setBackground(buttons);
+		hide.setBackground(buttons);
+		firstcoords.setBackground(buttons);
+		secondcoords.setBackground(buttons);
+		find.setBackground(buttons);
+		sh.setForeground(text);
+		xza1.setForeground(text);
+		xza2.setForeground(text);
+		result.setForeground(text);
+		distance1.setForeground(text);
+		distance2.setForeground(text);
+		nethercoords.setForeground(text);
+		nethercoords_.setForeground(text);
+		chunkcoords.setForeground(text);
+		chunkcoords_.setForeground(text);
+		topbar.setForeground(text);
+		minimize.setForeground(text);
+		hide.setForeground(buttontext);
+		settings.setForeground(buttontext);
+		clear.setForeground(buttontext);
+		find.setForeground(buttontext);
+		firstcoords.setForeground(buttontext);
+		secondcoords.setForeground(buttontext);
+		minimize.setBackground(titlebar);
+		topbar.setBackground(titlebar);
+		topbar2.setBackground(titlebar);
 		
 	}
 	
@@ -287,15 +332,15 @@ public class GUI implements ActionListener {
 	}
 	
 	public static void Hide() {
+		
+		xza1.setVisible(hidden);
+		xza2.setVisible(hidden);
+		firstcoords.setVisible(hidden);
+		secondcoords.setVisible(hidden);
+		find.setVisible(hidden);
+		distance1.setVisible(hidden);
+		distance2.setVisible(hidden);
 		if(hidden) {
-			hidden = false;
-			xza1.setVisible(true);
-			xza2.setVisible(true);
-			firstcoords.setVisible(true);
-			secondcoords.setVisible(true);
-			find.setVisible(true);
-			distance1.setVisible(true);
-			distance2.setVisible(true);
 			Resize(m);
 			frame.setSize((210+framex_extra)*m/100, (165+extracoords*20)*m/100);
 		} 
@@ -303,7 +348,6 @@ public class GUI implements ActionListener {
 			frame.setSize(210*m/100, 50*m/100 + 5);
 			close.setBounds(185*m/100, 0, 25*m/100, 25*m/100);
 			minimize.setBounds(160*m/100, 0, 25*m/100, 25*m/100);
-			hidden = true;
 			if(result.getText().split(" ").length > 1) {
 				if(ShowCoordsOnHideScreen > 0) {
 					frame.setSize(210*m/100, ((75+20*extracoords*(ShowCoordsOnHideScreen-1))*m/100) + 5);
@@ -320,23 +364,18 @@ public class GUI implements ActionListener {
 					nethercoords_.setBounds(v, 75*m/100, 100*m/100, 20*m/100);
 					chunkcoords.setBounds(10*m/100, (75+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
 					chunkcoords_.setBounds(v, (75+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
-					xza1.setVisible(false);
-					xza2.setVisible(false);
-					firstcoords.setVisible(false);
-					secondcoords.setVisible(false);
-					find.setVisible(false);
-					distance1.setVisible(false);
-					distance2.setVisible(false);
 				}
 			}
 		}
+
+		hidden = !hidden;
 	}
 	
 	public static void Find() {
 		
 		numberofcalculations++;
 		String sh_coordsraw = Calc.calculation(firstcoords.getText(), secondcoords.getText(), ShowNetherCoords, NetherCoordsDecimals, ShowChunkCoords);
-		if(sh_coordsraw == "Error") {
+		if(sh_coordsraw.equals("Error")) {
 			result.setText("Error");
 		}
 		else {
@@ -402,7 +441,6 @@ public class GUI implements ActionListener {
 			hidden = false;
 			Hide();
 		}
-		
 		}
 		
 		if(Autoclear) {

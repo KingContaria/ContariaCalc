@@ -43,8 +43,9 @@ public class ClipboardReader {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
-	}
+		}
 
-}
+	}
+	
+	
 }

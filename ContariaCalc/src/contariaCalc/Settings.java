@@ -33,6 +33,8 @@ public class Settings implements ActionListener, ChangeListener {
 	JButton showchunkcoordstoggle = new JButton("OFF");
 	JLabel alwaysontop = new JLabel("Always On Top:");
 	JButton alwaysontoptoggle = new JButton("OFF");
+	JLabel translucent = new JLabel("Translucent:");
+	JButton translucenttoggle = new JButton("OFF");
 	JLabel autoclear = new JLabel("Autoclear:");
 	JButton autocleartoggle = new JButton("OFF");
 	JLabel autoclearafter = new JLabel("Autoclear after           min");
@@ -42,6 +44,9 @@ public class Settings implements ActionListener, ChangeListener {
 	JButton hidewhenclearedtoggle = new JButton("OFF");
 	JLabel showcoordsonhidescreen = new JLabel("Result on Hide Screen:");
 	JButton showcoordsonhidescreentoggle = new JButton("No");
+	JLabel textfont = new JLabel("Text Font:");
+	JTextField settextfont = new JTextField(GUI.textfont + "");
+	JButton applysettextfont = new JButton("✔");
 	JLabel resize = new JLabel("Resize:");
 	JSlider resizing = new JSlider(JSlider.HORIZONTAL, 50, 200, GUI.m);
 	JButton resetsize = new JButton("Reset");
@@ -131,6 +136,15 @@ public class Settings implements ActionListener, ChangeListener {
 		panel.add(alwaysontoptoggle);
 		settingsnumber++;
 		
+		translucent.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
+		panel.add(translucent);
+		translucenttoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
+		if(GUI.Translucent) {
+			translucenttoggle.setText("ON");
+		}
+		panel.add(translucenttoggle);
+		settingsnumber++;
+		
 		autoclear.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
 		panel.add(autoclear);
 		autocleartoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
@@ -167,6 +181,14 @@ public class Settings implements ActionListener, ChangeListener {
 		panel.add(showcoordsonhidescreentoggle);
 		settingsnumber++;
 		
+		textfont.setBounds(10, 10 + settingsnumber * settingsgap, 250, 20);
+		panel.add(textfont);
+		settextfont.setBounds(75, 10 + settingsnumber * settingsgap, 70, 20);
+		panel.add(settextfont);
+		applysettextfont.setBounds(156, 10 + settingsnumber * settingsgap, 44, 20);
+		panel.add(applysettextfont);
+		settingsnumber++;
+		
 		resize.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
 		panel.add(resize);
 		resizing.setBounds(50, 12 + settingsnumber * settingsgap, 80, 20);
@@ -190,11 +212,13 @@ public class Settings implements ActionListener, ChangeListener {
 		shownethercoordstoggle.addActionListener(this);
 		nethercoordsdecimalstoggle.addActionListener(this);
 		alwaysontoptoggle.addActionListener(this);
+		translucenttoggle.addActionListener(this);
 		showchunkcoordstoggle.addActionListener(this);
 		autocleartoggle.addActionListener(this);
 		applyautoclearmin.addActionListener(this);
 		hidewhenclearedtoggle.addActionListener(this);
 		showcoordsonhidescreentoggle.addActionListener(this);
+		applysettextfont.addActionListener(this);
 		resetsize.addActionListener(this);
 		resizing.addChangeListener(this);
 		changecolor.addChangeListener(this);
@@ -207,11 +231,13 @@ public class Settings implements ActionListener, ChangeListener {
 		if(e.getSource() == resizing) {
 			GUI.m = resizing.getValue();
 			GUI.Resize(resizing.getValue());
+			GUI.pref.putInt("m", GUI.m);
 		}
 		
 		if(e.getSource() == changecolor) {
 			GUI.c = Math.abs(changecolor.getValue() - 345);
 			GUI.SetColor(GUI.c);
+			GUI.pref.putInt("c", GUI.c);
 		}
 		
 	}
@@ -221,11 +247,9 @@ public class Settings implements ActionListener, ChangeListener {
 
 		if(e.getSource() == clipboardreadertoggle) {
 			if(GUI.ClipboardReader) {
-				GUI.ClipboardReader = false;
 				clipboardreadertoggle.setText("OFF");
 			}
 			else {
-				GUI.ClipboardReader = true;
 				clipboardreadertoggle.setText("ON");
 				new Thread() {
 		            public void run() {
@@ -233,21 +257,24 @@ public class Settings implements ActionListener, ChangeListener {
 		            }
 		        }.start();
 			}
+			GUI.ClipboardReader = !GUI.ClipboardReader;
+			GUI.pref.putBoolean("ClipboardReader", GUI.ClipboardReader);
 		}
 		
 		if(e.getSource() == applyclipboardreaderdelayms) {
 			GUI.ClipboardreaderDelay = (int) Double.parseDouble(clipboardreaderdelayms.getText());
+			GUI.pref.putInt("ClipboardreaderDelay", GUI.ClipboardreaderDelay);
 		}
 		
 		if(e.getSource() == showdistancetoggle) {
 			if(GUI.ShowDistance) {
-				GUI.ShowDistance = false;
 				showdistancetoggle.setText("OFF");
 			}
 			else {
-				GUI.ShowDistance = true;
 				showdistancetoggle.setText("ON");
 			}
+			GUI.ShowDistance = !GUI.ShowDistance;
+			GUI.pref.putBoolean("ShowDistance", GUI.ShowDistance);
 		}
 		
 		if(e.getSource() == distancefromtoggle) {
@@ -257,75 +284,88 @@ public class Settings implements ActionListener, ChangeListener {
 			case 1: distancefromtoggle.setText("2nd Throw"); break;
 			case 2: distancefromtoggle.setText("Both"); break;
 			}
+			GUI.pref.putInt("DistanceFrom", GUI.DistanceFrom);
 		}
 		
 		if(e.getSource() == shownethercoordstoggle) {
 			if(GUI.ShowNetherCoords) {
-				GUI.ShowNetherCoords = false;
 				shownethercoordstoggle.setText("OFF");
 			}
 			else {
-				GUI.ShowNetherCoords = true;
 				shownethercoordstoggle.setText("ON");
 			}
+			GUI.ShowNetherCoords = !GUI.ShowNetherCoords;
+			GUI.pref.putBoolean("ShowNetherCoords", GUI.ShowNetherCoords);
 		}
 		
 		if(e.getSource() == nethercoordsdecimalstoggle) {
 			GUI.NetherCoordsDecimals = (GUI.NetherCoordsDecimals + 1) % 4;
 			nethercoordsdecimalstoggle.setText("" + GUI.NetherCoordsDecimals);
-			
+			GUI.pref.putInt("NetherCoordsDecimals", GUI.NetherCoordsDecimals);
 		}
 		
 		if(e.getSource() == showchunkcoordstoggle) {
 			if(GUI.ShowChunkCoords) {
-				GUI.ShowChunkCoords = false;
 				showchunkcoordstoggle.setText("OFF");
 			}
 			else {
-				GUI.ShowChunkCoords = true;
 				showchunkcoordstoggle.setText("ON");
 			}
+			GUI.ShowChunkCoords = !GUI.ShowChunkCoords;
+			GUI.pref.putBoolean("ShowChunkCoords", GUI.ShowChunkCoords);
 		}
 		
 		if(e.getSource() == alwaysontoptoggle) {
 			if(GUI.AlwaysOnTop) {
-				GUI.AlwaysOnTop = false;
 				alwaysontoptoggle.setText("OFF");
-				GUI.frame.setAlwaysOnTop(false);
-				settings.setAlwaysOnTop(false);
 			}
 			else {
-				GUI.AlwaysOnTop = true;
 				alwaysontoptoggle.setText("ON");
-				GUI.frame.setAlwaysOnTop(true);
-				settings.setAlwaysOnTop(true);
 			}
+			GUI.AlwaysOnTop = !GUI.AlwaysOnTop;
+			GUI.frame.setAlwaysOnTop(GUI.AlwaysOnTop);
+			settings.setAlwaysOnTop(GUI.AlwaysOnTop);
+			GUI.pref.putBoolean("AlwaysOnTop", GUI.AlwaysOnTop);
+		}
+		
+		if(e.getSource() == translucenttoggle) {
+			if(GUI.Translucent) {
+				translucenttoggle.setText("OFF");
+				GUI.frame.setOpacity(1.0f);
+			}
+			else {
+				translucenttoggle.setText("ON");
+				GUI.frame.setOpacity(0.6f);
+			}
+			GUI.Translucent = !GUI.Translucent;
+			GUI.pref.putBoolean("Translucent", GUI.Translucent);
 		}
 		
 		if(e.getSource() == autocleartoggle) {
 			if(GUI.Autoclear) {
-				GUI.Autoclear = false;
 				autocleartoggle.setText("OFF");
 			}
 			else {
-				GUI.Autoclear = true;
 				autocleartoggle.setText("ON");
 			}
+			GUI.Autoclear = !GUI.Autoclear;
+			GUI.pref.putBoolean("Autoclear", GUI.Autoclear);
 		}
 		
 		if(e.getSource() == applyautoclearmin) {
 			GUI.AutoclearAfter = (int) Double.parseDouble(autoclearmin.getText());
+			GUI.pref.putInt("AutoclearAfter", GUI.AutoclearAfter);
 		}
 		
 		if(e.getSource() == hidewhenclearedtoggle) {
 			if(GUI.HideWhenCleared) {
-				GUI.HideWhenCleared = false;
 				hidewhenclearedtoggle.setText("OFF");
 			}
 			else {
-				GUI.HideWhenCleared = true;
 				hidewhenclearedtoggle.setText("ON");
 			}
+			GUI.HideWhenCleared = !GUI.HideWhenCleared;
+			GUI.pref.putBoolean("HideWhenCleared", GUI.HideWhenCleared);
 		}
 		
 		if(e.getSource() == showcoordsonhidescreentoggle) {
@@ -335,12 +375,20 @@ public class Settings implements ActionListener, ChangeListener {
 			case 1: showcoordsonhidescreentoggle.setText("SH"); break;
 			case 2: showcoordsonhidescreentoggle.setText("All"); break;
 			}
+			GUI.pref.putInt("ShowCoordsOnHideScreen", GUI.ShowCoordsOnHideScreen);
+		}
+		
+		if(e.getSource() == applysettextfont) {
+			GUI.textfont = settextfont.getText();
+			GUI.Resize(GUI.m);
+			GUI.pref.put("textfont", GUI.textfont);
 		}
 		
 		if(e.getSource() == resetsize) {
 			GUI.m = 100;
 			GUI.Resize(100);
 			resizing.setValue(100);
+			GUI.pref.putInt("m", GUI.m);
 		}
 		
 	}
