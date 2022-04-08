@@ -45,6 +45,8 @@ public class Settings implements ActionListener, ChangeListener {
 	JLabel resize = new JLabel("Resize:");
 	JSlider resizing = new JSlider(JSlider.HORIZONTAL, 50, 200, GUI.m);
 	JButton resetsize = new JButton("Reset");
+	JLabel color = new JLabel("Color:");
+	JSlider changecolor = new JSlider(JSlider.HORIZONTAL, 90, 255, Math.abs(GUI.c - 345));
 	
 	public Settings() {
 		
@@ -173,6 +175,12 @@ public class Settings implements ActionListener, ChangeListener {
 		panel.add(resetsize);
 		settingsnumber++;
 		
+		color.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
+		panel.add(color);
+		changecolor.setBounds(50, 12 + settingsnumber * settingsgap, 150, 20);
+		panel.add(changecolor);
+		settingsnumber++;
+		
 		settings.setSize(230, 50 + settingsnumber * settingsgap);
 		
 		clipboardreadertoggle.addActionListener(this);
@@ -189,6 +197,7 @@ public class Settings implements ActionListener, ChangeListener {
 		showcoordsonhidescreentoggle.addActionListener(this);
 		resetsize.addActionListener(this);
 		resizing.addChangeListener(this);
+		changecolor.addChangeListener(this);
 		
 	}
 
@@ -198,6 +207,11 @@ public class Settings implements ActionListener, ChangeListener {
 		if(e.getSource() == resizing) {
 			GUI.m = resizing.getValue();
 			GUI.Resize(resizing.getValue());
+		}
+		
+		if(e.getSource() == changecolor) {
+			GUI.c = Math.abs(changecolor.getValue() - 345);
+			GUI.SetColor(GUI.c);
 		}
 		
 	}
