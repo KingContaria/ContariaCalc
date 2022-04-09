@@ -2,6 +2,8 @@ package contariaCalc;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -19,9 +21,9 @@ public class GUI implements ActionListener {
 	
 	public static JFrame frame = new JFrame("ContariaCalc");
 	static JPanel panel = new MotionPanel(frame);
-	static JButton close = new JButton("X");
+	static JButton close = new JButton("×");
 	static JButton minimize = new JButton("_");
-	static JLabel topbar = new JLabel("ContariaCalc v1.1.2");
+	static JLabel topbar = new JLabel("ContariaCalc v1.1.5");
 	static JLabel topbar2 = new JLabel();
 	static JButton hide = new JButton("...");
 	static JButton find = new JButton("Find");
@@ -89,6 +91,8 @@ public class GUI implements ActionListener {
 		frame.setUndecorated(true);
 		frame.setAlwaysOnTop(AlwaysOnTop);
 		frame.setVisible(true);
+		Image icon = Toolkit.getDefaultToolkit().getImage("images/ender_eye.png");
+		frame.setIconImage(icon);
 		frame.add(panel);
 
 		if(Translucent) {
@@ -96,7 +100,7 @@ public class GUI implements ActionListener {
 		}
 		
 		panel.setLayout(null);
-		
+
 		panel.add(close);
 		panel.add(minimize);
 		panel.add(topbar);
@@ -105,6 +109,7 @@ public class GUI implements ActionListener {
 		close.setBorder(emptyBorder);
 		minimize.setBorder(emptyBorder);
 		close.setBackground(new Color(220, 0, 0, 255));
+		close.setForeground(new Color(255, 255, 255, 255));
 		topbar.setOpaque(true);
 		topbar2.setOpaque(true);
 
@@ -192,12 +197,12 @@ public class GUI implements ActionListener {
 		
 		Font font = new Font(textfont + "", Font.BOLD, 12*m/100*textsizer/100);
 
+		topbar2.setBounds(0, 0, (210+framex_extra)*m/100, 25*m/100);
 		close.setBounds(((185+framex_extra*framexextra_m)*m/100), 0, 25*m/100, 25*m/100);
-		close.setFont(font);
+		close.setFont(new Font("Arial", Font.BOLD, 12*m/100*textsizer/50));
 		minimize.setBounds((160+framex_extra*framexextra_m)*m/100, 0, 25*m/100, 25*m/100);
-		minimize.setFont(font);
+		minimize.setFont(new Font("Arial", Font.BOLD, 12*m/100*textsizer/75));
 		topbar.setBounds(10*m/100, 0, (151+framex_extra*framexextra_m)*m/100, 25*m/100);
-		topbar2.setBounds(0, 0, 10*m/100, 25*m/100);
 		topbar.setFont(font);
 		
 		settings.setBounds(35*m/100, 30*m/100, 85*m/100, 20*m/100);
@@ -291,9 +296,9 @@ public class GUI implements ActionListener {
 		find.setForeground(buttontext);
 		firstcoords.setForeground(buttontext);
 		secondcoords.setForeground(buttontext);
+		topbar2.setBackground(titlebar);
 		minimize.setBackground(titlebar);
 		topbar.setBackground(titlebar);
-		topbar2.setBackground(titlebar);
 		
 	}
 	
@@ -326,8 +331,7 @@ public class GUI implements ActionListener {
 			if(hidden == false) {
 				Hide();
 			}
-		}
-		
+		}		
 	}
 	
 	public static void Hide() {
@@ -373,10 +377,10 @@ public class GUI implements ActionListener {
 		chunkcoords_.setVisible(ShowChunkCoords);
 		if(ShowDistance) {
 			switch(DistanceFrom) {
-			case 0:	sh_coords = sh_coords + "   (D: " + Distance.DistanceCalc(firstcoords.getText(), sh_coords) + ")"; break;
-			case 1: sh_coords = sh_coords + "   (D: " + Distance.DistanceCalc(secondcoords.getText(), sh_coords) + ")"; break;
-			case 2: distance1.setText("D: " + Distance.DistanceCalc(firstcoords.getText(), sh_coords));
-					distance2.setText("D: " + Distance.DistanceCalc(secondcoords.getText(), sh_coords));
+			case 0:	sh_coords = sh_coords + "   (D: " + Calc.DistanceCalc(firstcoords.getText(), sh_coords) + ")"; break;
+			case 1: sh_coords = sh_coords + "   (D: " + Calc.DistanceCalc(secondcoords.getText(), sh_coords) + ")"; break;
+			case 2: distance1.setText("D: " + Calc.DistanceCalc(firstcoords.getText(), sh_coords));
+					distance2.setText("D: " + Calc.DistanceCalc(secondcoords.getText(), sh_coords));
 					framex_extra = 35;
 			}
 		}
@@ -424,7 +428,6 @@ public class GUI implements ActionListener {
 	            }
 	        }.start();
 		}
-		
 	}
 			
 

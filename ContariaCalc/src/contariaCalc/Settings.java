@@ -1,15 +1,18 @@
 package contariaCalc;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.regex.Pattern;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -17,6 +20,9 @@ public class Settings implements ActionListener, ChangeListener {
 	
 	JFrame settings = new JFrame("Settings");
 	JPanel panel = new JPanel();
+	JButton showcalcsettings = new JButton("CALC");
+	JButton showfeaturesettings = new JButton("FEATURES");
+	JButton showwindowsettings = new JButton("WINDOW");
 	JLabel clipboardreader = new JLabel("ClipboardReader:");
 	JButton clipboardreadertoggle = new JButton("OFF");
 	JLabel clipboardreaderdelay = new JLabel("Check every                 ms");
@@ -54,157 +60,17 @@ public class Settings implements ActionListener, ChangeListener {
 	JLabel color = new JLabel("Color:");
 	JSlider changecolor = new JSlider(JSlider.HORIZONTAL, 90, 255, Math.abs(GUI.c - 345));
 	
+	boolean calcsettings = false;
+	boolean featuresettings = false;
+	boolean windowsettings = false;
+	
 	public Settings() {
 		
-		int settingsnumber = 0;
-		int settingsgap = 30;
+		GUI();
 		
-		settings.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		settings.setAlwaysOnTop(true);
-		settings.setVisible(true);
-		settings.add(panel);
-		
-		panel.setLayout(null);
-
-		clipboardreader.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
-		panel.add(clipboardreader);
-		clipboardreadertoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
-		if(GUI.ClipboardReader) {
-			clipboardreadertoggle.setText("ON");
-		}
-		panel.add(clipboardreadertoggle);
-		settingsnumber++;
-		
-		clipboardreaderdelay.setBounds(10, 10 + settingsnumber * settingsgap, 250, 20);
-		panel.add(clipboardreaderdelay);
-		clipboardreaderdelayms.setBounds(84, 10 + settingsnumber * settingsgap, 45, 20);
-		panel.add(clipboardreaderdelayms);
-		applyclipboardreaderdelayms.setBounds(156, 10 + settingsnumber * settingsgap, 44, 20);
-		panel.add(applyclipboardreaderdelayms);
-		settingsnumber++;
-		
-		showdistance.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
-		panel.add(showdistance);
-		showdistancetoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
-		if(GUI.ShowDistance) {
-			showdistancetoggle.setText("ON");
-		}
-		panel.add(showdistancetoggle);
-		settingsnumber++;
-		
-		distancefrom.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
-		panel.add(distancefrom);
-		distancefromtoggle.setBounds(100, 10 + settingsnumber * settingsgap, 100, 20);
-		switch(GUI.DistanceFrom) {
-		case 1: distancefromtoggle.setText("2nd Throw"); break;
-		case 2: distancefromtoggle.setText("Both"); break;
-		}
-		panel.add(distancefromtoggle);
-		settingsnumber++;
-		
-		
-		shownethercoords.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
-		panel.add(shownethercoords);
-		shownethercoordstoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
-		if(GUI.ShowNetherCoords) {
-			shownethercoordstoggle.setText("ON");
-		}
-		panel.add(shownethercoordstoggle);
-		settingsnumber++;
-		
-		nethercoordsdecimals.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
-		panel.add(nethercoordsdecimals);
-		nethercoordsdecimalstoggle.setBounds(159, 10 + settingsnumber * settingsgap, 41, 20);
-		nethercoordsdecimalstoggle.setText("" + GUI.NetherCoordsDecimals);
-		panel.add(nethercoordsdecimalstoggle);
-		settingsnumber++;
-		
-		showchunkcoords.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
-		panel.add(showchunkcoords);
-		showchunkcoordstoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
-		if(GUI.ShowChunkCoords) {
-			showchunkcoordstoggle.setText("ON");
-		}
-		panel.add(showchunkcoordstoggle);
-		settingsnumber++;
-		
-		alwaysontop.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
-		panel.add(alwaysontop);
-		alwaysontoptoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
-		if(GUI.AlwaysOnTop) {
-			alwaysontoptoggle.setText("ON");
-		}
-		panel.add(alwaysontoptoggle);
-		settingsnumber++;
-		
-		translucent.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
-		panel.add(translucent);
-		translucenttoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
-		if(GUI.Translucent) {
-			translucenttoggle.setText("ON");
-		}
-		panel.add(translucenttoggle);
-		settingsnumber++;
-		
-		autoclear.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
-		panel.add(autoclear);
-		autocleartoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
-		if(GUI.Autoclear) {
-			autocleartoggle.setText("ON");
-		}
-		panel.add(autocleartoggle);
-		settingsnumber++;
-		
-		autoclearafter.setBounds(10, 10 + settingsnumber * settingsgap, 250, 20);
-		panel.add(autoclearafter);
-		autoclearmin.setBounds(100, 10 + settingsnumber * settingsgap, 25, 20);
-		panel.add(autoclearmin);
-		applyautoclearmin.setBounds(156, 10 + settingsnumber * settingsgap, 44, 20);
-		panel.add(applyautoclearmin);
-		settingsnumber++;
-		
-		hidewhencleared.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
-		panel.add(hidewhencleared);
-		hidewhenclearedtoggle.setBounds(140, 10 + settingsnumber * settingsgap, 60, 20);
-		if(GUI.HideWhenCleared) {
-			hidewhenclearedtoggle.setText("ON");
-		}
-		panel.add(hidewhenclearedtoggle);
-		settingsnumber++;
-		
-		showcoordsonhidescreen.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
-		panel.add(showcoordsonhidescreen);
-		showcoordsonhidescreentoggle.setBounds(150, 10 + settingsnumber * settingsgap, 50, 20);
-		switch(GUI.ShowCoordsOnHideScreen) {
-		case 1: showcoordsonhidescreentoggle.setText("SH"); break;
-		case 2: showcoordsonhidescreentoggle.setText("All"); break;
-		}
-		panel.add(showcoordsonhidescreentoggle);
-		settingsnumber++;
-		
-		textfont.setBounds(10, 10 + settingsnumber * settingsgap, 250, 20);
-		panel.add(textfont);
-		settextfont.setBounds(75, 10 + settingsnumber * settingsgap, 70, 20);
-		panel.add(settextfont);
-		applysettextfont.setBounds(156, 10 + settingsnumber * settingsgap, 44, 20);
-		panel.add(applysettextfont);
-		settingsnumber++;
-		
-		resize.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
-		panel.add(resize);
-		resizing.setBounds(50, 12 + settingsnumber * settingsgap, 80, 20);
-		panel.add(resizing);
-		resetsize.setBounds(130, 10 + settingsnumber * settingsgap, 70, 20);
-		panel.add(resetsize);
-		settingsnumber++;
-		
-		color.setBounds(10, 10 + settingsnumber * settingsgap, 150, 20);
-		panel.add(color);
-		changecolor.setBounds(50, 12 + settingsnumber * settingsgap, 150, 20);
-		panel.add(changecolor);
-		settingsnumber++;
-		
-		settings.setSize(230, 50 + settingsnumber * settingsgap);
+		showcalcsettings.addActionListener(this);
+		showfeaturesettings.addActionListener(this);
+		showwindowsettings.addActionListener(this);
 		
 		clipboardreadertoggle.addActionListener(this);
 		applyclipboardreaderdelayms.addActionListener(this);
@@ -223,6 +89,193 @@ public class Settings implements ActionListener, ChangeListener {
 		resetsize.addActionListener(this);
 		resizing.addChangeListener(this);
 		changecolor.addChangeListener(this);
+		
+	}
+	
+	public void GUI() {
+		
+		panel.removeAll();
+		
+		int settingsnumber = 0;
+		int settingsgap = 25;
+		
+		settings.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		settings.setAlwaysOnTop(true);
+		settings.setVisible(true);
+		settings.add(panel);
+		
+		panel.setLayout(null);
+		
+		Border emptyBorder = BorderFactory.createEmptyBorder();
+		
+		showcalcsettings.setBounds(5, 5 + settingsnumber * settingsgap, 200, 20);
+		panel.add(showcalcsettings);
+		showcalcsettings.setBorder(emptyBorder);
+		showcalcsettings.setBackground(Color.LIGHT_GRAY);
+		settingsnumber++;
+		
+		if(calcsettings) {
+			
+			showdistance.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
+			panel.add(showdistance);
+			showdistancetoggle.setBounds(140, 5 + settingsnumber * settingsgap, 60, 20);
+			if(GUI.ShowDistance) {
+				showdistancetoggle.setText("ON");
+			}
+			panel.add(showdistancetoggle);
+			settingsnumber++;
+			
+			distancefrom.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
+			panel.add(distancefrom);
+			distancefromtoggle.setBounds(100, 5 + settingsnumber * settingsgap, 100, 20);
+			switch(GUI.DistanceFrom) {
+			case 1: distancefromtoggle.setText("2nd Throw"); break;
+			case 2: distancefromtoggle.setText("Both"); break;
+			}
+			panel.add(distancefromtoggle);
+			settingsnumber++;
+			
+			shownethercoords.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
+			panel.add(shownethercoords);
+			shownethercoordstoggle.setBounds(140, 5 + settingsnumber * settingsgap, 60, 20);
+			if(GUI.ShowNetherCoords) {
+				shownethercoordstoggle.setText("ON");
+			}
+			panel.add(shownethercoordstoggle);
+			settingsnumber++;
+			
+			nethercoordsdecimals.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
+			panel.add(nethercoordsdecimals);
+			nethercoordsdecimalstoggle.setBounds(159, 5 + settingsnumber * settingsgap, 41, 20);
+			nethercoordsdecimalstoggle.setText("" + GUI.NetherCoordsDecimals);
+			panel.add(nethercoordsdecimalstoggle);
+			settingsnumber++;
+			
+			showchunkcoords.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
+			panel.add(showchunkcoords);
+			showchunkcoordstoggle.setBounds(140, 5 + settingsnumber * settingsgap, 60, 20);
+			if(GUI.ShowChunkCoords) {
+				showchunkcoordstoggle.setText("ON");
+			}
+			panel.add(showchunkcoordstoggle);
+			settingsnumber++;
+
+			showcoordsonhidescreen.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
+			panel.add(showcoordsonhidescreen);
+			showcoordsonhidescreentoggle.setBounds(150, 5 + settingsnumber * settingsgap, 50, 20);
+			switch(GUI.ShowCoordsOnHideScreen) {
+			case 1: showcoordsonhidescreentoggle.setText("SH"); break;
+			case 2: showcoordsonhidescreentoggle.setText("All"); break;
+			}
+			panel.add(showcoordsonhidescreentoggle);
+			settingsnumber++;
+			
+		}
+		
+		showfeaturesettings.setBounds(5, 5 + settingsnumber * settingsgap, 200, 20);
+		panel.add(showfeaturesettings);
+		showfeaturesettings.setBorder(emptyBorder);
+		showfeaturesettings.setBackground(Color.LIGHT_GRAY);
+		settingsnumber++;
+		
+		if(featuresettings) {
+			
+			clipboardreader.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
+			panel.add(clipboardreader);
+			clipboardreadertoggle.setBounds(140, 5 + settingsnumber * settingsgap, 60, 20);
+			if(GUI.ClipboardReader) {
+				clipboardreadertoggle.setText("ON");
+			}
+			panel.add(clipboardreadertoggle);
+			settingsnumber++;
+			
+			clipboardreaderdelay.setBounds(10, 5 + settingsnumber * settingsgap, 250, 20);
+			panel.add(clipboardreaderdelay);
+			clipboardreaderdelayms.setBounds(84, 5 + settingsnumber * settingsgap, 45, 20);
+			panel.add(clipboardreaderdelayms);
+			applyclipboardreaderdelayms.setBounds(156, 5 + settingsnumber * settingsgap, 44, 20);
+			panel.add(applyclipboardreaderdelayms);
+			settingsnumber++;
+			
+			autoclear.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
+			panel.add(autoclear);
+			autocleartoggle.setBounds(140, 5 + settingsnumber * settingsgap, 60, 20);
+			if(GUI.Autoclear) {
+				autocleartoggle.setText("ON");
+			}
+			panel.add(autocleartoggle);
+			settingsnumber++;
+			
+			autoclearafter.setBounds(10, 5 + settingsnumber * settingsgap, 250, 20);
+			panel.add(autoclearafter);
+			autoclearmin.setBounds(100, 5 + settingsnumber * settingsgap, 25, 20);
+			panel.add(autoclearmin);
+			applyautoclearmin.setBounds(156, 5 + settingsnumber * settingsgap, 44, 20);
+			panel.add(applyautoclearmin);
+			settingsnumber++;
+			
+			hidewhencleared.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
+			panel.add(hidewhencleared);
+			hidewhenclearedtoggle.setBounds(140, 5 + settingsnumber * settingsgap, 60, 20);
+			if(GUI.HideWhenCleared) {
+				hidewhenclearedtoggle.setText("ON");
+			}
+			panel.add(hidewhenclearedtoggle);
+			settingsnumber++;
+			
+		}
+		
+		showwindowsettings.setBounds(5, 5 + settingsnumber * settingsgap, 200, 20);
+		panel.add(showwindowsettings);
+		showwindowsettings.setBorder(emptyBorder);
+		showwindowsettings.setBackground(Color.LIGHT_GRAY);
+		settingsnumber++;
+		
+		if(windowsettings) {
+			
+			alwaysontop.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
+			panel.add(alwaysontop);
+			alwaysontoptoggle.setBounds(140, 5 + settingsnumber * settingsgap, 60, 20);
+			if(GUI.AlwaysOnTop) {
+				alwaysontoptoggle.setText("ON");
+			}
+			panel.add(alwaysontoptoggle);
+			settingsnumber++;
+			
+			translucent.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
+			panel.add(translucent);
+			translucenttoggle.setBounds(140, 5 + settingsnumber * settingsgap, 60, 20);
+			if(GUI.Translucent) {
+				translucenttoggle.setText("ON");
+			}
+			panel.add(translucenttoggle);
+			settingsnumber++;
+			
+			textfont.setBounds(10, 5 + settingsnumber * settingsgap, 250, 20);
+			panel.add(textfont);
+			settextfont.setBounds(75, 5 + settingsnumber * settingsgap, 70, 20);
+			panel.add(settextfont);
+			applysettextfont.setBounds(156, 5 + settingsnumber * settingsgap, 44, 20);
+			panel.add(applysettextfont);
+			settingsnumber++;
+			
+			resize.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
+			panel.add(resize);
+			resizing.setBounds(50, 7 + settingsnumber * settingsgap, 80, 20);
+			panel.add(resizing);
+			resetsize.setBounds(130, 5 + settingsnumber * settingsgap, 70, 20);
+			panel.add(resetsize);
+			settingsnumber++;
+			
+			color.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
+			panel.add(color);
+			changecolor.setBounds(50, 5 + settingsnumber * settingsgap, 150, 20);
+			panel.add(changecolor);
+			settingsnumber++;
+			
+		}
+		
+		settings.setSize(226, 44 + settingsnumber * settingsgap);
 		
 	}
 
@@ -245,6 +298,21 @@ public class Settings implements ActionListener, ChangeListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
+		if(e.getSource() == showcalcsettings) {
+			calcsettings = !calcsettings;
+			GUI();
+		}
+
+		if(e.getSource() == showfeaturesettings) {
+			featuresettings = !featuresettings;
+			GUI();
+		}
+
+		if(e.getSource() == showwindowsettings) {
+			windowsettings = !windowsettings;
+			GUI();
+		}
 
 		if(e.getSource() == clipboardreadertoggle) {
 			if(GUI.ClipboardReader) {
