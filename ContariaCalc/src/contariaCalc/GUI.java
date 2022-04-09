@@ -198,9 +198,9 @@ public class GUI implements ActionListener {
 		Font font = new Font(textfont + "", Font.BOLD, 12*m/100*textsizer/100);
 
 		topbar2.setBounds(0, 0, (210+framex_extra)*m/100, 25*m/100);
-		close.setBounds(((185+framex_extra*framexextra_m)*m/100), 0, 25*m/100, 25*m/100);
+		close.setBounds(((210+framex_extra*framexextra_m)*m/100)-25*m/100, 0, 25*m/100, 25*m/100);
 		close.setFont(new Font("Arial", Font.BOLD, 12*m/100*textsizer/50));
-		minimize.setBounds((160+framex_extra*framexextra_m)*m/100, 0, 25*m/100, 25*m/100);
+		minimize.setBounds(((210+framex_extra*framexextra_m)*m/100)-50*m/100, 0, 25*m/100, 25*m/100);
 		minimize.setFont(new Font("Arial", Font.BOLD, 12*m/100*textsizer/75));
 		topbar.setBounds(10*m/100, 0, (151+framex_extra*framexextra_m)*m/100, 25*m/100);
 		topbar.setFont(font);
