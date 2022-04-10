@@ -6,6 +6,8 @@ import java.awt.GraphicsDevice;
 import java.awt.Image;
 import java.awt.MouseInfo;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -25,7 +27,7 @@ public class GUI implements ActionListener {
 	static JPanel panel = new MotionPanel(frame);
 	static JButton close = new JButton("×");
 	static JButton minimize = new JButton("_");
-	static JLabel topbar = new JLabel("ContariaCalc v1.1.6");
+	static JLabel topbar = new JLabel("ContariaCalc v1.1.7");
 	static JLabel topbar2 = new JLabel();
 	static JButton hide = new JButton("...");
 	static JButton find = new JButton("Find");
@@ -50,6 +52,7 @@ public class GUI implements ActionListener {
 	public static boolean CoordsOverlay = false;
 	public static boolean ClipboardReader = false;
 	public static int ClipboardreaderDelay = 1000;
+	public static boolean copycoordstocb = false;
 	public static boolean ShowDistance = true;
 	public static int DistanceFrom = 0;
 	public static boolean ShowNetherCoords = false;
@@ -163,6 +166,7 @@ public class GUI implements ActionListener {
 
 		ClipboardReader = pref.getBoolean("ClipboardReader", ClipboardReader);
 		ClipboardreaderDelay = pref.getInt("ClipboardreaderDelay", ClipboardreaderDelay);
+		copycoordstocb = pref.getBoolean("copycoordstocb", copycoordstocb);
 		ShowDistance = pref.getBoolean("ShowDistance", ShowDistance);
 		DistanceFrom = pref.getInt("DistanceFrom", DistanceFrom);
 		ShowNetherCoords = pref.getBoolean("ShowNetherCoords", ShowNetherCoords);
@@ -218,7 +222,7 @@ public class GUI implements ActionListener {
 		minimize.setBounds(((220+framex_extra*framexextra_m)*m/100)-50*m/100, 0, 25*m/100, 25*m/100);
 		minimize.setFont(new Font("Arial", Font.BOLD, 16*m/100));
 		topbar.setBounds(10*m/100, 0, (151+framex_extra*framexextra_m)*m/100, 25*m/100);
-		topbar.setFont(font);
+		topbar.setFont(new Font(textfont + "", Font.BOLD, 13*m/100*textsizer/100));
 		
 		settings.setBounds(35*m/100, 30*m/100, 85*m/100, 20*m/100);
 		settings.setFont(font);
@@ -376,8 +380,13 @@ public class GUI implements ActionListener {
 		framex_extra = 0;
 		numberofcalculations++;
 		String sh_coordsraw = Calc.Calculationinputoutput(firstcoords.getText(), secondcoords.getText());
+		Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
 		if(sh_coordsraw.equals("Error")) {
 			result.setText("Error");
+			if(copycoordstocb) {
+				StringSelection ss = new StringSelection(sh_coordsraw);
+				cb.setContents(ss, ss);
+			}
 		}
 		else {
 		String[] sh_coordssplit = sh_coordsraw.split(" / ");
@@ -425,6 +434,11 @@ public class GUI implements ActionListener {
 		}
 		
 		Resize(m);
+
+		if(copycoordstocb) {
+			StringSelection ss = new StringSelection(sh_coords);
+			cb.setContents(ss, ss);
+		}
 		
 		}
 		

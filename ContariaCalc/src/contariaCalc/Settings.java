@@ -33,9 +33,12 @@ public class Settings implements ActionListener, ChangeListener {
 	static JButton showaccuracytoggle = new JButton("OFF");
 	static JLabel clipboardreader = new JLabel("ClipboardReader:");
 	static JButton clipboardreadertoggle = new JButton("OFF");
-	static JLabel clipboardreaderdelay = new JLabel("Check every                 ms");
+	static JLabel clipboardreaderdelay = new JLabel("Check every");
+	static JLabel clipboardreaderdelay2 = new JLabel("ms");
 	static JTextField clipboardreaderdelayms = new JTextField(GUI.ClipboardreaderDelay + "");
 	static JButton applyclipboardreaderdelayms = new JButton("✔");
+	static JLabel copycoordstocb = new JLabel("Copy Result to CB:");
+	static JButton copycoordstocbtoggle = new JButton("OFF");
 	static JLabel showdistance = new JLabel("Show Distance to SH:");
 	static JButton showdistancetoggle = new JButton("OFF");
 	static JLabel distancefrom = new JLabel("Distance from:");
@@ -52,7 +55,8 @@ public class Settings implements ActionListener, ChangeListener {
 	static JButton translucenttoggle = new JButton("OFF");
 	static JLabel autoclear = new JLabel("Autoclear:");
 	static JButton autocleartoggle = new JButton("OFF");
-	static JLabel autoclearafter = new JLabel("Autoclear after           min");
+	static JLabel autoclearafter = new JLabel("Autoclear after");
+	static JLabel autoclearafter2 = new JLabel("min");
 	static JTextField autoclearmin = new JTextField(GUI.AutoclearAfter +  "");
 	static JButton applyautoclearmin = new JButton("✔");
 	static JLabel hidewhencleared = new JLabel("Hide when cleared:");
@@ -122,11 +126,15 @@ public class Settings implements ActionListener, ChangeListener {
 		panel.add(clipboardreader);
 		panel.add(clipboardreadertoggle);
 		panel.add(clipboardreaderdelay);
+		panel.add(clipboardreaderdelay2);
 		panel.add(clipboardreaderdelayms);
 		panel.add(applyclipboardreaderdelayms);
+		panel.add(copycoordstocb);
+		panel.add(copycoordstocbtoggle);
 		panel.add(autoclear);
 		panel.add(autocleartoggle);
 		panel.add(autoclearafter);
+		panel.add(autoclearafter2);
 		panel.add(autoclearmin);
 		panel.add(applyautoclearmin);
 		panel.add(hidewhencleared);
@@ -169,6 +177,7 @@ public class Settings implements ActionListener, ChangeListener {
 		showaccuracytoggle.addActionListener(this);
 		clipboardreadertoggle.addActionListener(this);
 		applyclipboardreaderdelayms.addActionListener(this);
+		copycoordstocbtoggle.addActionListener(this);
 		showdistancetoggle.addActionListener(this);
 		distancefromtoggle.addActionListener(this);
 		shownethercoordstoggle.addActionListener(this);
@@ -197,7 +206,9 @@ public class Settings implements ActionListener, ChangeListener {
 		settingsnumber = 1;
 		
 		Border emptyBorder = BorderFactory.createEmptyBorder();
-
+		
+		Font font = new Font(GUI.textfont + "", Font.BOLD, 12);
+		
 		topbar.setBounds(10, 0, 150, 25);
 		topbar.setOpaque(true);
 		topbar2.setBounds(0, 0, 10, 25);
@@ -210,6 +221,55 @@ public class Settings implements ActionListener, ChangeListener {
 		minimize.setBorder(emptyBorder);
 		minimize.setBounds(160, 0, 25, 25);
 		minimize.setFont(new Font("Arial", Font.BOLD, 16));
+		
+		showcalcsettings.setFont(font);
+		showfeaturesettings.setFont(font);
+		showwindowsettings.setFont(font);
+		showaccuracytoggle.setFont(font);
+		clipboardreadertoggle.setFont(font);
+		clipboardreaderdelayms.setFont(font);
+		copycoordstocbtoggle.setFont(font);
+		showdistancetoggle.setFont(font);
+		distancefromtoggle.setFont(font);
+		shownethercoordstoggle.setFont(font);
+		nethercoordsdecimalstoggle.setFont(font);
+		showchunkcoordstoggle.setFont(font);
+		alwaysontoptoggle.setFont(font);
+		translucenttoggle.setFont(font);
+		autocleartoggle.setFont(font);
+		autoclearmin.setFont(font);
+		hidewhenclearedtoggle.setFont(font);
+		showcoordsonhidescreentoggle.setFont(font);
+		settextfont.setFont(font);
+		resetsize.setFont(font);
+		morecoloroptions.setFont(font);
+		customisetextcolortoggle.setFont(font);
+		minimize.setFont(font);
+		topbar.setFont(new Font(GUI.textfont + "", Font.BOLD, 13));
+		showaccuracy.setFont(font);
+		clipboardreader.setFont(font);
+		clipboardreaderdelay.setFont(font);
+		clipboardreaderdelay2.setFont(font);
+		copycoordstocb.setFont(font);
+		showdistance.setFont(font);
+		distancefrom.setFont(font);
+		shownethercoords.setFont(font);
+		nethercoordsdecimals.setFont(font);
+		showchunkcoords.setFont(font);
+		alwaysontop.setFont(font);
+		translucent.setFont(font);
+		autoclear.setFont(font);
+		autoclearafter.setFont(font);
+		autoclearafter2.setFont(font);
+		hidewhencleared.setFont(font);
+		showcoordsonhidescreen.setFont(font);
+		textfont.setFont(font);
+		resize.setFont(font);
+		color.setFont(font);
+		red.setFont(font);
+		green.setFont(font);
+		blue.setFont(font);
+		customisetextcolor.setFont(font);
 		
 		showaccuracy.setVisible(false);
 		showaccuracytoggle.setVisible(false);
@@ -228,11 +288,15 @@ public class Settings implements ActionListener, ChangeListener {
 		clipboardreader.setVisible(false);
 		clipboardreadertoggle.setVisible(false);
 		clipboardreaderdelay.setVisible(false);
+		clipboardreaderdelay2.setVisible(false);
 		clipboardreaderdelayms.setVisible(false);
+		copycoordstocb.setVisible(false);
+		copycoordstocbtoggle.setVisible(false);
 		applyclipboardreaderdelayms.setVisible(false);
 		autoclear.setVisible(false);
 		autocleartoggle.setVisible(false);
 		autoclearafter.setVisible(false);
+		autoclearafter2.setVisible(false);
 		autoclearmin.setVisible(false);
 		applyautoclearmin.setVisible(false);
 		hidewhencleared.setVisible(false);
@@ -367,8 +431,16 @@ public class Settings implements ActionListener, ChangeListener {
 			settingsnumber++;
 			
 			clipboardreaderdelay.setBounds(10, 5 + settingsnumber * settingsgap, 250, 20);
+			clipboardreaderdelay2.setBounds(133, 5 + settingsnumber * settingsgap, 250, 20);
 			clipboardreaderdelayms.setBounds(84, 5 + settingsnumber * settingsgap, 45, 20);
 			applyclipboardreaderdelayms.setBounds(156, 5 + settingsnumber * settingsgap, 44, 20);
+			settingsnumber++;
+
+			copycoordstocb.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
+			copycoordstocbtoggle.setBounds(140, 5 + settingsnumber * settingsgap, 60, 20);
+			if(GUI.copycoordstocb) {
+				copycoordstocbtoggle.setText("ON");
+			}
 			settingsnumber++;
 			
 			autoclear.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
@@ -379,6 +451,7 @@ public class Settings implements ActionListener, ChangeListener {
 			settingsnumber++;
 			
 			autoclearafter.setBounds(10, 5 + settingsnumber * settingsgap, 250, 20);
+			autoclearafter2.setBounds(130, 5 + settingsnumber * settingsgap, 250, 20);
 			autoclearmin.setBounds(100, 5 + settingsnumber * settingsgap, 25, 20);
 			applyautoclearmin.setBounds(156, 5 + settingsnumber * settingsgap, 44, 20);
 			settingsnumber++;
@@ -393,11 +466,15 @@ public class Settings implements ActionListener, ChangeListener {
 			clipboardreader.setVisible(true);
 			clipboardreadertoggle.setVisible(true);
 			clipboardreaderdelay.setVisible(true);
+			clipboardreaderdelay2.setVisible(true);
 			clipboardreaderdelayms.setVisible(true);
 			applyclipboardreaderdelayms.setVisible(true);
+			copycoordstocb.setVisible(true);
+			copycoordstocbtoggle.setVisible(true);
 			autoclear.setVisible(true);
 			autocleartoggle.setVisible(true);
 			autoclearafter.setVisible(true);
+			autoclearafter2.setVisible(true);
 			autoclearmin.setVisible(true);
 			applyautoclearmin.setVisible(true);
 			hidewhencleared.setVisible(true);
@@ -542,6 +619,7 @@ public class Settings implements ActionListener, ChangeListener {
 		showaccuracytoggle.setBackground(buttons);
 		clipboardreadertoggle.setBackground(buttons);
 		applyclipboardreaderdelayms.setBackground(buttons);
+		copycoordstocbtoggle.setBackground(buttons);
 		showdistancetoggle.setBackground(buttons);
 		distancefromtoggle.setBackground(buttons);
 		shownethercoordstoggle.setBackground(buttons);
@@ -569,6 +647,7 @@ public class Settings implements ActionListener, ChangeListener {
 		clipboardreadertoggle.setForeground(buttontext);
 		clipboardreaderdelayms.setForeground(buttontext);
 		applyclipboardreaderdelayms.setForeground(buttontext);
+		copycoordstocbtoggle.setForeground(buttontext);
 		showdistancetoggle.setForeground(buttontext);
 		distancefromtoggle.setForeground(buttontext);
 		shownethercoordstoggle.setForeground(buttontext);
@@ -592,6 +671,8 @@ public class Settings implements ActionListener, ChangeListener {
 		showaccuracy.setForeground(text);
 		clipboardreader.setForeground(text);
 		clipboardreaderdelay.setForeground(text);
+		clipboardreaderdelay2.setForeground(text);
+		copycoordstocb.setForeground(text);
 		showdistance.setForeground(text);
 		distancefrom.setForeground(text);
 		shownethercoords.setForeground(text);
@@ -601,6 +682,7 @@ public class Settings implements ActionListener, ChangeListener {
 		translucent.setForeground(text);
 		autoclear.setForeground(text);
 		autoclearafter.setForeground(text);
+		autoclearafter2.setForeground(text);
 		hidewhencleared.setForeground(text);
 		showcoordsonhidescreen.setForeground(text);
 		textfont.setForeground(text);
@@ -822,6 +904,7 @@ public class Settings implements ActionListener, ChangeListener {
 				GUI.textsizer = 100;
 			}
 			GUI.Resize(GUI.m);
+			GUI();
 			GUI.pref.put("textfont", GUI.textfont);
 			GUI.pref.putInt("textsizer", GUI.textsizer);
 		}
@@ -849,6 +932,17 @@ public class Settings implements ActionListener, ChangeListener {
 			GUI.customisetextcolor = !GUI.customisetextcolor;
 			SetColor(GUI.g);
 			GUI.SetColor(GUI.g);
+		}
+		
+		if(e.getSource() == copycoordstocbtoggle) {
+			if(GUI.copycoordstocb) {
+				copycoordstocbtoggle.setText("OFF");
+			}
+			else {
+				copycoordstocbtoggle.setText("ON");
+			}
+			GUI.copycoordstocb = !GUI.copycoordstocb;
+			GUI.pref.putBoolean("copycoordstocb", GUI.copycoordstocb);
 		}
 		
 		if(e.getSource() == close) {

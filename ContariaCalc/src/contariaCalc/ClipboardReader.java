@@ -12,7 +12,7 @@ public class ClipboardReader {
 	
 	public ClipboardReader() {
 
-	String data = null;
+	String data = "";
 	try {
 		data = (String) Toolkit.getDefaultToolkit()
 		        .getSystemClipboard().getData(DataFlavor.stringFlavor);
