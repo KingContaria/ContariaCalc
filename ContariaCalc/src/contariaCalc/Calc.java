@@ -8,7 +8,7 @@ public class Calc {
 		
 	}
 	
-	public static String calculation(String firstthrow, String secondthrow, boolean ShowNetherCoords, int NetherCoordsDecimals, boolean ShowChunkCoords) {
+	public static String Calculationinputoutput(String firstthrow, String secondthrow) {
 		
 		String sh_coords = "Error";
 		
@@ -46,45 +46,30 @@ public class Calc {
 					a2 = Double.parseDouble(secondcoords[2]);
 				}
 				
-				double a1_ = a1;
-				double a2_ = a2;
+				double xz[] = TriangulationCalc(x1, z1, a1, x2, z2, a2);
 				
-				if(a1 < 0) {
-					a1_ = a1 + 180;
-				}
-				if(a2 < 0) {
-					a2_ = a2 + 180;
-				}
+				int x = (int) Math.round(xz[0]);
+				int z = (int) Math.round(xz[1]);
+			
+				sh_coords = x + " " + z;
 				
-				a1_ = a1_ - 90;
-				a2_ = a2_ - 90;
-				
-				double m1 = Math.tan(Math.toRadians(a1_));
-				double m2 = Math.tan(Math.toRadians(a2_));
-				double n1 = z1 + (-x1 * m1);
-				double n2 = z2 + (-x2 * m2);
-				
-				double x = (n2-n1) / (m1-m2);
-				double y = m1 * x + n1;
-				
-				//double throwdistance = Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(z1 - z2), 2));
-				
-				int x_ = (int) Math.round(x);
-				int y_ = (int) Math.round(y);
-				
-				sh_coords = x_ + " " + y_;
-				
-				if(ShowNetherCoords) {
+				if(GUI.marginoferror) {
 					
-					double xnether = Math.round((x / 8) * Math.pow(10 , NetherCoordsDecimals)) / Math.pow(10 , NetherCoordsDecimals);
-					double ynether = Math.round((y / 8) * Math.pow(10 , NetherCoordsDecimals)) / Math.pow(10 , NetherCoordsDecimals);
-					if(NetherCoordsDecimals == 0) {
+					sh_coords += MarginOfError(x1, z1, a1, x2, z2, a2);
+					
+				}
+				
+				if(GUI.ShowNetherCoords) {
+					
+					double xnether = Math.round((xz[0] / 8) * Math.pow(10 , GUI.NetherCoordsDecimals)) / Math.pow(10 , GUI.NetherCoordsDecimals);
+					double znether = Math.round((xz[1] / 8) * Math.pow(10 , GUI.NetherCoordsDecimals)) / Math.pow(10 , GUI.NetherCoordsDecimals);
+					if(GUI.NetherCoordsDecimals == 0) {
 						int xnether_ = (int) xnether;
-						int ynether_ = (int) ynether;
-						sh_coords += " / " + xnether_ + " " + ynether_;
+						int znether_ = (int) znether;
+						sh_coords += " / " + xnether_ + " " + znether_;
 					}
 					else {
-						sh_coords += " / " + xnether + " " + ynether;
+						sh_coords += " / " + xnether + " " + znether;
 					}
 					
 				}
@@ -92,27 +77,50 @@ public class Calc {
 					sh_coords += " / ";
 				}
 				
-				if(ShowChunkCoords) {
+				if(GUI.ShowChunkCoords) {
 					
-					int xchunk = x_ / 16;
-					int ychunk = y_ / 16;
-					if(x_ < 0) {
+					int xchunk = x / 16;
+					int zchunk = z / 16;
+					if(x < 0) {
 						xchunk -= 1;
 					}
-					if(y_ < 0) {
-						ychunk -= 1;
+					if(z < 0) {
+						zchunk -= 1;
 					}
-					sh_coords += " / " + xchunk + " " + ychunk;
+					sh_coords += " / " + xchunk + " " + zchunk;
 					
 				}
-				
-				
 			}
 		}
 		
 		return sh_coords;
 
 	}
+	
+public static double[] TriangulationCalc(double x1, double z1, double a1, double x2, double z2, double a2) {
+	
+	if(a1 < 0) {
+		a1 = a1 + 180;
+	}
+	if(a2 < 0) {
+		a2 = a2 + 180;
+	}
+	
+	a1 = a1 - 90;
+	a2 = a2 - 90;
+	
+	double m1 = Math.tan(Math.toRadians(a1));
+	double m2 = Math.tan(Math.toRadians(a2));
+	double n1 = z1 + (-x1 * m1);
+	double n2 = z2 + (-x2 * m2);
+	
+	double[] xz = new double[2];
+	
+	xz[0] = (n2-n1) / (m1-m2);
+	xz[1] = m1 * xz[0] + n1;
+	
+	return xz;
+}
 
 public static String DistanceCalc(String eyethrow_coords, String sh_coords) {
 	
@@ -136,10 +144,33 @@ public static String DistanceCalc(String eyethrow_coords, String sh_coords) {
 			distance = distance__ + "";
 		}
 	}
-
-			
 	
 	return distance;
+	
+}
+
+public static String MarginOfError(double x1, double z1, double a1, double x2, double z2, double a2) {
+	
+	double xz1[] = TriangulationCalc(x1, z1, a1, x2, z2, a2);
+	
+	int pv = 1;
+	
+	if(a1 < a2) {
+		pv = -1;
+	}
+	
+	a1 += 0.3 * pv;
+	a2 -= 0.3 * pv;
+	
+	double xz2[] = TriangulationCalc(x1, z1, a1, x2, z2, a2);
+
+	double distance = Math.sqrt(Math.pow(Math.abs(xz1[0] - xz2[0]), 2) + Math.pow(Math.abs(xz1[1] - xz2[1]), 2));
+	
+	int margin = (int) Math.round(distance);
+	
+	String marginoferror = " (+- " + margin + ")";
+	
+	return marginoferror;
 	
 }
 

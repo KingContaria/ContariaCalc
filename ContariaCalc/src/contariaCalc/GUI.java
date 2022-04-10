@@ -2,7 +2,9 @@ package contariaCalc;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GraphicsDevice;
 import java.awt.Image;
+import java.awt.MouseInfo;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,11 +21,11 @@ import javax.swing.border.Border;
 
 public class GUI implements ActionListener {
 	
-	public static JFrame frame = new JFrame("ContariaCalc");
+	static JFrame frame = new JFrame("ContariaCalc");
 	static JPanel panel = new MotionPanel(frame);
 	static JButton close = new JButton("×");
 	static JButton minimize = new JButton("_");
-	static JLabel topbar = new JLabel("ContariaCalc v1.1.5");
+	static JLabel topbar = new JLabel("ContariaCalc v1.1.6");
 	static JLabel topbar2 = new JLabel();
 	static JButton hide = new JButton("...");
 	static JButton find = new JButton("Find");
@@ -31,16 +33,18 @@ public class GUI implements ActionListener {
 	static JButton clear = new JButton("Clear");
 	static JLabel xza1 = new JLabel("x z a");
 	static JLabel xza2 = new JLabel("x z a");
-	static JLabel sh = new JLabel("SH Location:");
-	static JLabel distance1 = new JLabel("");
-	static JLabel distance2 = new JLabel("");
-	static JLabel result = new JLabel("");
-	static JLabel nethercoords = new JLabel("Nethercoords:");
+	static JLabel sh = new JLabel("SH:");
+	static JLabel distance1 = new JLabel();
+	static JLabel distance2 = new JLabel();
+	static JLabel distance3 = new JLabel();
+	static JLabel result = new JLabel();
+	static JLabel nethercoords = new JLabel("Nether:");
 	static JLabel nethercoords_ = new JLabel();
-	static JLabel chunkcoords = new JLabel("Chunkcoords:");
+	static JLabel chunkcoords = new JLabel("Chunk:");
 	static JLabel chunkcoords_ = new JLabel();
-	static JTextField firstcoords = new JTextField("");
-	static JTextField secondcoords = new JTextField("");
+	static JTextField firstcoords = new JTextField();
+	static JTextField secondcoords = new JTextField();
+	static Image icon = Toolkit.getDefaultToolkit().getImage("images/ender_eye.png");
 	
 	//Options
 	public static boolean CoordsOverlay = false;
@@ -51,6 +55,7 @@ public class GUI implements ActionListener {
 	public static boolean ShowNetherCoords = false;
 	public static int NetherCoordsDecimals = 0;
 	public static boolean ShowChunkCoords = false;
+	public static boolean marginoferror = false;
 	public static boolean AlwaysOnTop = true ;
 	public static boolean Translucent = false;
 	public static boolean Autoclear = false;
@@ -58,7 +63,9 @@ public class GUI implements ActionListener {
 	public static boolean HideWhenCleared = false;
 	public static int ShowCoordsOnHideScreen = 0;
 	public static int m = 100;
-	public static int c = 255;
+	public static int g = 255;
+	public static int[] c = new int[3];
+	public static boolean customisetextcolor = false;
 	public static String textfont = "Arial";
 	public static int textsizer = 100;
 	
@@ -85,14 +92,14 @@ public class GUI implements ActionListener {
         }.start();
 		}
 		Resize(m);
-		SetColor(c);
+		SetColor(g);
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setUndecorated(true);
 		frame.setAlwaysOnTop(AlwaysOnTop);
 		frame.setVisible(true);
-		Image icon = Toolkit.getDefaultToolkit().getImage("images/ender_eye.png");
 		frame.setIconImage(icon);
+		frame.setLocation((int) pref.getDouble("FramePositionX", 0), (int) pref.getDouble("FramePositionY", 0));
 		frame.add(panel);
 
 		if(Translucent) {
@@ -156,19 +163,23 @@ public class GUI implements ActionListener {
 
 		ClipboardReader = pref.getBoolean("ClipboardReader", ClipboardReader);
 		ClipboardreaderDelay = pref.getInt("ClipboardreaderDelay", ClipboardreaderDelay);
-		ShowDistance = pref.getBoolean("ShowDistance", ShowDistance);;
+		ShowDistance = pref.getBoolean("ShowDistance", ShowDistance);
 		DistanceFrom = pref.getInt("DistanceFrom", DistanceFrom);
-		ShowNetherCoords = pref.getBoolean("ShowNetherCoords", ShowNetherCoords);;;
+		ShowNetherCoords = pref.getBoolean("ShowNetherCoords", ShowNetherCoords);
 		NetherCoordsDecimals = pref.getInt("NetherCoordsDecimals", NetherCoordsDecimals);
-		ShowChunkCoords = pref.getBoolean("ShowChunkCoords", ShowChunkCoords);;;
-		AlwaysOnTop = pref.getBoolean("AlwaysOnTop", AlwaysOnTop);; ;
-		Translucent = pref.getBoolean("Translucent", Translucent);;;
-		Autoclear = pref.getBoolean("Autoclear", Autoclear);;;
+		ShowChunkCoords = pref.getBoolean("ShowChunkCoords", ShowChunkCoords);
+		marginoferror = pref.getBoolean("marginoferror", marginoferror);
+		AlwaysOnTop = pref.getBoolean("AlwaysOnTop", AlwaysOnTop);
+		Translucent = pref.getBoolean("Translucent", Translucent);
+		Autoclear = pref.getBoolean("Autoclear", Autoclear);
 		AutoclearAfter = pref.getInt("AutoclearAfter", AutoclearAfter);
-		HideWhenCleared = pref.getBoolean("HideWhenCleared", HideWhenCleared);;;
+		HideWhenCleared = pref.getBoolean("HideWhenCleared", HideWhenCleared);
 		ShowCoordsOnHideScreen = pref.getInt("ShowCoordsOnHideScreen", ShowCoordsOnHideScreen);
 		m = pref.getInt("m", m);
-		c = pref.getInt("c", c);
+		g = pref.getInt("g", g);
+		c[0] = pref.getInt("c0", 100);
+		c[1] = pref.getInt("c1", 100);
+		c[2] = pref.getInt("c2", 100);
 		textfont = pref.get("textfont", textfont);
 		textsizer = pref.getInt("textsizer", textsizer);
 		
@@ -181,50 +192,54 @@ public class GUI implements ActionListener {
 		
 		if(hidden) {
 			int extra = 0;
-			if(DistanceFrom == 1) {
-				extra = 20;
+			if(ShowCoordsOnHideScreen > 0) {
+				if(result.getText().equals("")) {
+				}
+				else {
+					extra = 20;
+				}
 			}
-			if(DistanceFrom == 2) {
-				extra = 25 + extracoords*20;
+			if(ShowCoordsOnHideScreen == 2) {
+				extra += 5 + extracoords*20;
 			}
-			frame.setSize(210*m/100, (50+extra)*m/100 + 5);
+			frame.setSize(220*m/100, (50+extra)*m/100 + 5);
 			framexextra_m = 0;
 			changeextracoordspos = 85;
 		} 
 		else {
-			frame.setSize((210+framex_extra)*m/100, (165+extracoords*20)*m/100); 
+			frame.setSize((220+framex_extra)*m/100, (165+extracoords*20)*m/100); 
 		}
 		
 		Font font = new Font(textfont + "", Font.BOLD, 12*m/100*textsizer/100);
 
-		topbar2.setBounds(0, 0, (210+framex_extra)*m/100, 25*m/100);
-		close.setBounds(((210+framex_extra*framexextra_m)*m/100)-25*m/100, 0, 25*m/100, 25*m/100);
-		close.setFont(new Font("Arial", Font.BOLD, 12*m/100*textsizer/50));
-		minimize.setBounds(((210+framex_extra*framexextra_m)*m/100)-50*m/100, 0, 25*m/100, 25*m/100);
-		minimize.setFont(new Font("Arial", Font.BOLD, 12*m/100*textsizer/75));
+		topbar2.setBounds(0, 0, (220+framex_extra)*m/100, 25*m/100);
+		close.setBounds(((220+framex_extra*framexextra_m)*m/100)-25*m/100, 0, 25*m/100, 25*m/100);
+		close.setFont(new Font("Arial", Font.BOLD, 24*m/100));
+		minimize.setBounds(((220+framex_extra*framexextra_m)*m/100)-50*m/100, 0, 25*m/100, 25*m/100);
+		minimize.setFont(new Font("Arial", Font.BOLD, 16*m/100));
 		topbar.setBounds(10*m/100, 0, (151+framex_extra*framexextra_m)*m/100, 25*m/100);
 		topbar.setFont(font);
 		
 		settings.setBounds(35*m/100, 30*m/100, 85*m/100, 20*m/100);
 		settings.setFont(font);
-		clear.setBounds(125*m/100, 30*m/100, 75*m/100, 20*m/100);
+		clear.setBounds(125*m/100, 30*m/100, 85*m/100, 20*m/100);
 		clear.setFont(font);
 		hide.setBounds(10*m/100, 30*m/100, 20*m/100, 20*m/100);
 		hide.setFont(font);
 		
-		firstcoords.setBounds(45*m/100, 60*m/100, 150*m/100, 20*m/100);
+		firstcoords.setBounds(45*m/100, 60*m/100, 160*m/100, 20*m/100);
 		xza1.setBounds(10*m/100, 60*m/100, 30*m/100, 20*m/100);
 		xza1.setFont(font);
-		distance1.setBounds(200*m/100, 60*m/100, 50*m/100, 20*m/100);
+		distance1.setBounds(210*m/100, 60*m/100, 50*m/100, 20*m/100);
 		distance1.setFont(font);
 			
-		secondcoords.setBounds(45*m/100, 85*m/100, 150*m/100, 20*m/100);
+		secondcoords.setBounds(45*m/100, 85*m/100, 160*m/100, 20*m/100);
 		xza2.setBounds(10*m/100, 85*m/100, 30*m/100, 20*m/100);
 		xza2.setFont(font);
-		distance2.setBounds(200*m/100, 85*m/100, 50*m/100, 20*m/100);
+		distance2.setBounds(210*m/100, 85*m/100, 50*m/100, 20*m/100);
 		distance2.setFont(font);
 		
-		find.setBounds(70*m/100, 112*m/100, 70*m/100, 25*m/100);
+		find.setBounds(75*m/100, 112*m/100, 70*m/100, 25*m/100);
 		find.setFont(font);
 		
 		sh.setBounds(10*m/100, (140-changeextracoordspos)*m/100, 90*m/100, 20*m/100);
@@ -232,15 +247,15 @@ public class GUI implements ActionListener {
 		
 		nethercoords.setBounds(10*m/100, (160-changeextracoordspos)*m/100, 100*m/100, 20*m/100);
 		nethercoords.setFont(font);
-		nethercoords_.setBounds(100 * m/100, (160-changeextracoordspos)*m/100, 100*m/100, 20*m/100);
+		nethercoords_.setBounds(65 * m/100, (160-changeextracoordspos)*m/100, 100*m/100, 20*m/100);
 		nethercoords_.setFont(font);
 		
 		chunkcoords.setBounds(10*m/100, (160-changeextracoordspos+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
 		chunkcoords.setFont(font);
-		chunkcoords_.setBounds(100 * m/100, (160-changeextracoordspos+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
+		chunkcoords_.setBounds(65 * m/100, (160-changeextracoordspos+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
 		chunkcoords_.setFont(font);
 		
-		result.setBounds(100 * m/100, (140-changeextracoordspos)*m/100, 150*m/100, 20*m/100);
+		result.setBounds(65 * m/100, (140-changeextracoordspos)*m/100, 160*m/100, 20*m/100);
 		result.setFont(font);
 	}
 	
@@ -263,13 +278,22 @@ public class GUI implements ActionListener {
 		else {
 			buttonnametone = 220;
 		}
+
+		int c0t = c[0];
+		int c1t = c[1];
+		int c2t = c[2];
+		if(!customisetextcolor) {
+			c0t = 100;
+			c1t = 100;
+			c2t = 100;
+		}
 		
-		Color buttons = new Color(tone, tone, tone, 255);
-		Color text = new Color(texttone, texttone, texttone, 255);
-		Color buttontext = new Color(buttonnametone, buttonnametone, buttonnametone, 255);
-		Color titlebar = new Color(titlebartone, titlebartone, titlebartone, 255);
+		Color buttons = new Color(tone*c[0]/100, tone*c[1]/100, tone*c[2]/100, 255);
+		Color titlebar = new Color(titlebartone*c[0]/100, titlebartone*c[1]/100, titlebartone*c[2]/100, 255);
+		Color text = new Color(texttone*c0t/100, texttone*c1t/100, texttone*c2t/100, 255);
+		Color buttontext = new Color(buttonnametone*c0t/100, buttonnametone*c1t/100, buttonnametone*c2t/100, 255);
 		
-		panel.setBackground(new Color(paneltone, paneltone, paneltone, 255));
+		panel.setBackground(new Color(paneltone*c[0]/100, paneltone*c[1]/100, paneltone*c[2]/100, 255));
 		
 		hide.setBackground(buttons);
 		settings.setBackground(buttons);
@@ -305,14 +329,14 @@ public class GUI implements ActionListener {
 	public static void Clear() {
 		
 		if(hidden) {
-			frame.setSize(210*m/100, 50*m/100 + 5);
+			frame.setSize(220*m/100, 50*m/100 + 5);
 		} 
 		else {
-			frame.setSize(210*m/100, 165*m/100);  
+			frame.setSize(220*m/100, 165*m/100);  
 		}
 
-		close.setBounds(185*m/100, 0, 25*m/100, 25*m/100);
-		minimize.setBounds(160*m/100, 0, 25*m/100, 25*m/100);
+		close.setBounds((220*m/100)-25*m/100, 0, 25*m/100, 25*m/100);
+		minimize.setBounds((220*m/100)-50*m/100, 0, 25*m/100, 25*m/100);
 		
 		result.setText("");
 		firstcoords.setText("");
@@ -328,7 +352,7 @@ public class GUI implements ActionListener {
 		numberofcalculations++;
 		
 		if(HideWhenCleared) {
-			if(hidden == false) {
+			if(!hidden) {
 				Hide();
 			}
 		}		
@@ -345,24 +369,13 @@ public class GUI implements ActionListener {
 		distance2.setVisible(hidden);
 		hidden = !hidden;
 		Resize(m);
-		if(hidden) {
-			frame.setSize(210*m/100, 50*m/100 + 5);
-			close.setBounds(185*m/100, 0, 25*m/100, 25*m/100);
-			minimize.setBounds(160*m/100, 0, 25*m/100, 25*m/100);
-				if(ShowCoordsOnHideScreen > 0) {
-					frame.setSize(210*m/100, ((75+20*extracoords*(ShowCoordsOnHideScreen-1))*m/100) + 5);
-			}
-		} 
-		else {
-			frame.setSize((210+framex_extra)*m/100, (165+extracoords*20)*m/100);
-		}
 	}
 	
 	public static void Find() {
 
 		framex_extra = 0;
 		numberofcalculations++;
-		String sh_coordsraw = Calc.calculation(firstcoords.getText(), secondcoords.getText(), ShowNetherCoords, NetherCoordsDecimals, ShowChunkCoords);
+		String sh_coordsraw = Calc.Calculationinputoutput(firstcoords.getText(), secondcoords.getText());
 		if(sh_coordsraw.equals("Error")) {
 			result.setText("Error");
 		}
@@ -377,8 +390,8 @@ public class GUI implements ActionListener {
 		chunkcoords_.setVisible(ShowChunkCoords);
 		if(ShowDistance) {
 			switch(DistanceFrom) {
-			case 0:	sh_coords = sh_coords + "   (D: " + Calc.DistanceCalc(firstcoords.getText(), sh_coords) + ")"; break;
-			case 1: sh_coords = sh_coords + "   (D: " + Calc.DistanceCalc(secondcoords.getText(), sh_coords) + ")"; break;
+			case 0:	sh_coords = sh_coords + " (D: " + Calc.DistanceCalc(firstcoords.getText(), sh_coords) + ")"; break;
+			case 1: sh_coords = sh_coords + " (D: " + Calc.DistanceCalc(secondcoords.getText(), sh_coords) + ")"; break;
 			case 2: distance1.setText("D: " + Calc.DistanceCalc(firstcoords.getText(), sh_coords));
 					distance2.setText("D: " + Calc.DistanceCalc(secondcoords.getText(), sh_coords));
 					framex_extra = 35;
@@ -439,7 +452,21 @@ public class GUI implements ActionListener {
 		}
 		
 		if(e.getSource() == settings) {
-			new Settings();
+			Settings.settings.setVisible(!Settings.settings.isVisible());
+			int x = 0;
+			if(hidden) {
+				x = 225*m/100;
+			} 
+			else {
+				x = (225+framex_extra)*m/100; 
+			}
+			GraphicsDevice gd = MouseInfo.getPointerInfo().getDevice();
+			if(frame.getX() + x + 210 < gd.getDisplayMode().getWidth()) {
+				Settings.settings.setLocation(frame.getX() + x, frame.getY());
+			}
+			else {
+				Settings.settings.setLocation(frame.getX() - 215, frame.getY());
+			}
 		}
 		
 		if(e.getSource() == clear) {
@@ -451,6 +478,8 @@ public class GUI implements ActionListener {
 		}
 		
 		if(e.getSource() == close) {
+			GUI.pref.putDouble("FramePositionX", frame.getLocation().getX());
+			GUI.pref.putDouble("FramePositionY", frame.getLocation().getY());
 			frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 		}
 		
