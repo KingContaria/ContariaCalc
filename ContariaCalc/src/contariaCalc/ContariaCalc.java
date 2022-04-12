@@ -6,6 +6,6 @@ public class ContariaCalc {
 
 			new GUI();
 			new Settings();
-
+			
 	}
 }

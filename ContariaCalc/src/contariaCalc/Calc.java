@@ -8,116 +8,133 @@ public class Calc {
 		
 	}
 	
-	public static String Calculationinputoutput(String firstthrow, String secondthrow) {
+	public static String[] Calculationinputoutput(String firstthrow, String secondthrow) {
 		
-		String sh_coords = "Error";
+		String[] result = new String[3];
+		result[0] = "Error";
 		
 		String[] firstcoords = firstthrow.split(" ");
 		String[] secondcoords = secondthrow.split(" ");
 		
-		if(firstcoords.length == 3) {
-			if(secondcoords.length == 3) {
+		if(firstcoords.length == 3 && secondcoords.length == 3) {
 
-				double x1 = Double.parseDouble(firstcoords[0]);
-				double z1 = Double.parseDouble(firstcoords[1]);
-				double a1 = Double.parseDouble(firstcoords[2]);
-				double x2;
-				double z2;
-				double a2;
-				
-				if(secondcoords[0].contains("+")) {
-					String[] secondcoords_ = secondcoords[0].split(Pattern.quote("+"));
-					x2 = x1 + Double.parseDouble(secondcoords_[1]);
-				} else {
-					x2 = Double.parseDouble(secondcoords[0]);
-				}
-				
-				if(secondcoords[1].contains("+")) {
-					String[] secondcoords_ = secondcoords[1].split(Pattern.quote("+"));
-					z2 = z1 + Double.parseDouble(secondcoords_[1]);
-				} else {
-					z2 = Double.parseDouble(secondcoords[1]);
-				}
-				
-				if(secondcoords[2].contains("+")) {
-					String[] secondcoords_ = secondcoords[2].split(Pattern.quote("+"));
-					a2 = a1 + Double.parseDouble(secondcoords_[1]);
-				} else {
-					a2 = Double.parseDouble(secondcoords[2]);
-				}
-				
-				double xz[] = TriangulationCalc(x1, z1, a1, x2, z2, a2);
-				
-				int x = (int) Math.round(xz[0]);
-				int z = (int) Math.round(xz[1]);
+			double[][] xza = new double[2][3];
 			
-				sh_coords = x + " " + z;
-				
-				if(GUI.marginoferror) {
-					
-					sh_coords += MarginOfError(x1, z1, a1, x2, z2, a2);
-					
+			for(int e=0; e<3; e++) {
+			
+			xza[0][e] = Double.parseDouble(firstcoords[e]);
+			
+				if(secondcoords[e].contains("+")) {
+					String[] secondcoords_ = secondcoords[0].split(Pattern.quote("+"));
+					xza[1][e] = xza[0][e] + Double.parseDouble(secondcoords_[1]);
+				} 
+				else {
+					xza[1][e] = Double.parseDouble(secondcoords[e]);
 				}
-				
-				if(GUI.ShowNetherCoords) {
-					
-					double xnether = Math.round((xz[0] / 8) * Math.pow(10 , GUI.NetherCoordsDecimals)) / Math.pow(10 , GUI.NetherCoordsDecimals);
-					double znether = Math.round((xz[1] / 8) * Math.pow(10 , GUI.NetherCoordsDecimals)) / Math.pow(10 , GUI.NetherCoordsDecimals);
-					if(GUI.NetherCoordsDecimals == 0) {
-						int xnether_ = (int) xnether;
-						int znether_ = (int) znether;
-						sh_coords += " / " + xnether_ + " " + znether_;
-					}
-					else {
-						sh_coords += " / " + xnether + " " + znether;
-					}
-					
+			}
+			
+			for(int e=0; e<2; e++) {
+				if(xza[e][2] < 0) {
+					xza[e][2] = xza[0][2] + 180;
+				}
+			
+				xza[e][2] -= 90;
+			}
+			
+			double xzsh[] = TriangulationCalc(xza);
+			
+			int x = (int) Math.round(xzsh[0]);
+			int z = (int) Math.round(xzsh[1]);
+			
+			result[0] = x + " " + z;
+			
+			if(GUI.marginoferror) {
+			
+				result[0] += MarginOfError(xza);
+			
+			}
+			
+			if(GUI.ShowNetherCoords) {
+		
+				double xnether = Math.round((xzsh[0] / 8) * Math.pow(10 , GUI.NetherCoordsDecimals)) / Math.pow(10 , GUI.NetherCoordsDecimals);
+				double znether = Math.round((xzsh[1] / 8) * Math.pow(10 , GUI.NetherCoordsDecimals)) / Math.pow(10 , GUI.NetherCoordsDecimals);
+				if(GUI.NetherCoordsDecimals == 0) {
+					result[1] = (int) xnether + " " + (int) znether;
 				}
 				else {
-					sh_coords += " / ";
+					result[1] = xnether + " " + znether;
+				}
+			}
+			
+			if(GUI.ShowChunkCoords) {
+				
+				int[] chunk = new int[2];
+				chunk[0] = x / 16;
+				chunk[1] = z / 16;
+				if(x < 0) {
+					chunk[0] -= 1;
+				}
+				if(z < 0) {
+					chunk[1] -= 1;
+				}
+
+				String chunkdistance = "";
+				
+				if(GUI.ShowChunkDistance) {
+					String[] chunkdistancetext = new String[2];
+					for(int e=0; e<2; e++) {
+						int[] fromchunk = new int[2];
+						fromchunk[0] = (int) xza[e][0] / 16;
+						fromchunk[1] = (int) xza[e][1] / 16;
+						if(xza[e][0] < 0) {
+							fromchunk[0] -= 1;
+						}
+						if(xza[e][1] < 0) {
+							fromchunk[1] -= 1;
+						}
+						chunkdistancetext[e] = ChunkDistanceCalc(chunk, fromchunk);
+					}
+					GUI.chunkdistance1.setText(chunkdistancetext[0]);
+					GUI.chunkdistance2.setText(chunkdistancetext[1]);
 				}
 				
-				if(GUI.ShowChunkCoords) {
-					
-					int xchunk = x / 16;
-					int zchunk = z / 16;
-					if(x < 0) {
-						xchunk -= 1;
+				if(GUI.ShowChunkDistanceFromPortal) {
+					String[] portalchunkcoords_split = GUI.portalchunkcoords.getText().split(" ");
+					if(portalchunkcoords_split.length == 2) {
+						int[] portalchunk = new int[2];
+						portalchunk[0] = (int) Double.parseDouble(portalchunkcoords_split[0]);
+						portalchunk[1] = (int) Double.parseDouble(portalchunkcoords_split[1]);
+						if(!GUI.ShowPortalInputField) {
+							chunkdistance = ChunkDistanceCalc(chunk, portalchunk).replace("C", "");
+						}
+						GUI.portalchunkdistance.setText(ChunkDistanceCalc(chunk, portalchunk));
 					}
-					if(z < 0) {
-						zchunk -= 1;
-					}
-					sh_coords += " / " + xchunk + " " + zchunk;
-					
 				}
+				
+				result[2] = chunk[0] + " " + chunk[1] + chunkdistance;
+					
 			}
 		}
 		
-		return sh_coords;
+		return result;
 
 	}
 	
-public static double[] TriangulationCalc(double x1, double z1, double a1, double x2, double z2, double a2) {
+public static double[] TriangulationCalc(double[][] xza) {
 	
-	if(a1 < 0) {
-		a1 = a1 + 180;
+	double[] m = new double[2];
+	double[] n = new double[2];
+	
+	for(int e=0; e<2; e++) {
+		
+		m[e] = Math.tan(Math.toRadians(xza[e][2]));
+		n[e] = xza[e][1] + (-xza[e][0] * m[e]);
 	}
-	if(a2 < 0) {
-		a2 = a2 + 180;
-	}
-	
-	a1 = a1 - 90;
-	a2 = a2 - 90;
-	
-	double m1 = Math.tan(Math.toRadians(a1));
-	double m2 = Math.tan(Math.toRadians(a2));
-	double n1 = z1 + (-x1 * m1);
-	double n2 = z2 + (-x2 * m2);
 	
 	double[] xz = new double[2];
 	
-	xz[0] = (n2-n1) / (m1-m2);
-	xz[1] = m1 * xz[0] + n1;
+	xz[0] = (n[1]-n[0]) / (m[0]-m[1]);
+	xz[1] = m[0] * xz[0] + n[0];
 	
 	return xz;
 }
@@ -137,11 +154,9 @@ public static String DistanceCalc(String eyethrow_coords, String sh_coords) {
 			double x2 = Double.parseDouble(sh_coords_split[0]);
 			double z2 = Double.parseDouble(sh_coords_split[1]);
 			
-			double distance_ = Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(z1 - z2), 2));
+			int distance_int = (int) (Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(z1 - z2), 2)));
 			
-			int distance__ = (int) Math.round(distance_);
-			
-			distance = distance__ + "";
+			distance = distance_int + "";
 		}
 	}
 	
@@ -149,22 +164,39 @@ public static String DistanceCalc(String eyethrow_coords, String sh_coords) {
 	
 }
 
-public static String MarginOfError(double x1, double z1, double a1, double x2, double z2, double a2) {
+public static String ChunkDistanceCalc(int[] xz1, int[] xz2) {
 	
-	double xz1[] = TriangulationCalc(x1, z1, a1, x2, z2, a2);
+	int distance;
+	
+	if(Math.abs(xz1[0]-xz2[0]) > Math.abs(xz1[1]-xz2[1])){
+		distance = Math.abs(xz1[0]-xz2[0]);
+	}
+	else {
+		distance = Math.abs(xz1[1]-xz2[1]);
+	}
+	
+	String chunkdistancestring = " (CD: " + distance + ")";
+	
+	return chunkdistancestring;
+	
+}
+
+public static String MarginOfError(double[][] xza) {
+	
+	double xz1[] = TriangulationCalc(xza);
 	
 	int pv = 1;
 	
-	if(a1 < a2) {
+	if(xza[0][2] < xza[1][2]) {
 		pv = -1;
 	}
 	
-	a1 += 0.3 * pv;
-	a2 -= 0.3 * pv;
+	xza[0][2] += 0.3 * pv;
+	xza[1][2] -= 0.3 * pv;
 	
-	double xz2[] = TriangulationCalc(x1, z1, a1, x2, z2, a2);
+	double xzsh[] = TriangulationCalc(xza);
 
-	double distance = Math.sqrt(Math.pow(Math.abs(xz1[0] - xz2[0]), 2) + Math.pow(Math.abs(xz1[1] - xz2[1]), 2));
+	double distance = Math.sqrt(Math.pow(Math.abs(xz1[0] - xzsh[0]), 2) + Math.pow(Math.abs(xz1[1] - xzsh[1]), 2));
 	
 	int margin = (int) Math.round(distance);
 	
