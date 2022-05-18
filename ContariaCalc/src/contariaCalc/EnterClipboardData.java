@@ -5,9 +5,6 @@ public class EnterClipboardData {
 	public EnterClipboardData(String data) {
 
 		String[] datasplit = data.split(" ");
-		if(GUI.ShowChunkDistance && datasplit.length == 2 && data != GUI.result.getText()) {
-			GUI.portalchunkcoords.setText(data);
-		}
 		if(datasplit.length == 3) {
 			if(GUI.firstcoords.getText().equals("")) {
 				GUI.firstcoords.setText(data);

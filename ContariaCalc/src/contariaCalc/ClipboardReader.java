@@ -14,22 +14,25 @@ public class ClipboardReader {
 
 	String data = "";
 	try {
-		data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+		data = (String) Toolkit.getDefaultToolkit()
+		        .getSystemClipboard().getData(DataFlavor.stringFlavor);
 	} catch (HeadlessException | UnsupportedFlavorException | IOException e) {
 		e.printStackTrace();
 	}
 	
 	String lastclipboard = data;
-
+	
 	while(GUI.ClipboardReader) {
 		
 		try {
-			data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+			data = (String) Toolkit.getDefaultToolkit()
+			        .getSystemClipboard().getData(DataFlavor.stringFlavor);
 		} catch (HeadlessException | UnsupportedFlavorException | IOException e) {
 			e.printStackTrace();
 		}
 		
-		if(!data.equals(lastclipboard)) {
+		if(data.equals(lastclipboard)) {}
+		else {
 			new EnterClipboardData(data);
 		}
 		

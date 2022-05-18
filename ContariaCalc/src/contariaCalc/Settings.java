@@ -49,13 +49,6 @@ public class Settings implements ActionListener, ChangeListener {
 	static JLabel showchunkcoords = new JLabel("Show Chunk Coords:");
 	static JButton nethercoordsdecimalstoggle = new JButton("0");
 	static JButton showchunkcoordstoggle = new JButton("OFF");
-	static JLabel showchunkdistance = new JLabel("Show Chunk Distance ...");
-	static JLabel showchunkdistancefromeyethrow = new JLabel("  ... from Eyethrows:");
-	static JButton showchunkdistancefromeyethrowtoggle = new JButton("OFF");
-	static JLabel showchunkdistancefromportal = new JLabel("  ... from Portal:");
-	static JButton showchunkdistancefromportaltoggle = new JButton("OFF");
-	static JLabel portalinputfield = new JLabel("Portal Inputfield:");
-	static JButton portalinputfieldtoggle = new JButton("OFF");
 	static JLabel alwaysontop = new JLabel("Always On Top:");
 	static JButton alwaysontoptoggle = new JButton("OFF");
 	static JLabel translucent = new JLabel("Translucent:");
@@ -87,8 +80,6 @@ public class Settings implements ActionListener, ChangeListener {
 	static JSlider changeblue = new JSlider(JSlider.HORIZONTAL, 0, 100, GUI.c[2]);
 	static JLabel customisetextcolor = new JLabel("Change Text Color:");
 	static JButton customisetextcolortoggle = new JButton("OFF");
-	static JLabel showborders = new JLabel("Borders:");
-	static JButton showborderstoggle = new JButton("OFF");
 	
 	boolean calcsettings = false;
 	boolean featuresettings = false;
@@ -123,19 +114,12 @@ public class Settings implements ActionListener, ChangeListener {
 		panel.add(showdistancetoggle);
 		panel.add(distancefrom);
 		panel.add(distancefromtoggle);
-		panel.add(showchunkdistancefromportal);
-		panel.add(showchunkdistancefromportaltoggle);
-		panel.add(portalinputfield);
-		panel.add(portalinputfieldtoggle);
 		panel.add(shownethercoords);
 		panel.add(shownethercoordstoggle);
 		panel.add(nethercoordsdecimals);
 		panel.add(nethercoordsdecimalstoggle);
 		panel.add(showchunkcoords);
 		panel.add(showchunkcoordstoggle);
-		panel.add(showchunkdistance);
-		panel.add(showchunkdistancefromeyethrow);
-		panel.add(showchunkdistancefromeyethrowtoggle);
 		panel.add(showcoordsonhidescreen);
 		panel.add(showcoordsonhidescreentoggle);
 		panel.add(showfeaturesettings);
@@ -166,8 +150,6 @@ public class Settings implements ActionListener, ChangeListener {
 		panel.add(resize);
 		panel.add(resizing);
 		panel.add(resetsize);
-		panel.add(showborders);
-		panel.add(showborderstoggle);
 		panel.add(color);
 		panel.add(changecolor);
 		panel.add(morecoloroptions);
@@ -198,21 +180,17 @@ public class Settings implements ActionListener, ChangeListener {
 		copycoordstocbtoggle.addActionListener(this);
 		showdistancetoggle.addActionListener(this);
 		distancefromtoggle.addActionListener(this);
-		showchunkdistancefromportaltoggle.addActionListener(this);
-		portalinputfieldtoggle.addActionListener(this);
 		shownethercoordstoggle.addActionListener(this);
 		nethercoordsdecimalstoggle.addActionListener(this);
 		alwaysontoptoggle.addActionListener(this);
 		translucenttoggle.addActionListener(this);
 		showchunkcoordstoggle.addActionListener(this);
-		showchunkdistancefromeyethrowtoggle.addActionListener(this);
 		autocleartoggle.addActionListener(this);
 		applyautoclearmin.addActionListener(this);
 		hidewhenclearedtoggle.addActionListener(this);
 		showcoordsonhidescreentoggle.addActionListener(this);
 		applysettextfont.addActionListener(this);
 		resetsize.addActionListener(this);
-		showborderstoggle.addActionListener(this);
 		morecoloroptions.addActionListener(this);
 		customisetextcolortoggle.addActionListener(this);
 		resizing.addChangeListener(this);
@@ -229,14 +207,7 @@ public class Settings implements ActionListener, ChangeListener {
 		
 		Border emptyBorder = BorderFactory.createEmptyBorder();
 		
-		Font font = new Font(GUI.textfont + "", Font.BOLD, 12*GUI.textsizer/100);
-		
-		Border borders = GUI.justtogetnormalborderlayout.getBorder();
-		Border textfieldborders = GUI.justtogetnormalborderlayout2.getBorder();
-		if(!GUI.showborders) {
-			borders = BorderFactory.createEmptyBorder();
-			textfieldborders = BorderFactory.createEmptyBorder();
-		}
+		Font font = new Font(GUI.textfont + "", Font.BOLD, 12);
 		
 		topbar.setBounds(10, 0, 150, 25);
 		topbar.setOpaque(true);
@@ -260,12 +231,9 @@ public class Settings implements ActionListener, ChangeListener {
 		copycoordstocbtoggle.setFont(font);
 		showdistancetoggle.setFont(font);
 		distancefromtoggle.setFont(font);
-		showchunkdistancefromportaltoggle.setFont(font);
-		portalinputfieldtoggle.setFont(font);
 		shownethercoordstoggle.setFont(font);
 		nethercoordsdecimalstoggle.setFont(font);
 		showchunkcoordstoggle.setFont(font);
-		showchunkdistancefromeyethrowtoggle.setFont(font);
 		alwaysontoptoggle.setFont(font);
 		translucenttoggle.setFont(font);
 		autocleartoggle.setFont(font);
@@ -273,12 +241,11 @@ public class Settings implements ActionListener, ChangeListener {
 		hidewhenclearedtoggle.setFont(font);
 		showcoordsonhidescreentoggle.setFont(font);
 		settextfont.setFont(font);
-		showborderstoggle.setFont(font);
 		resetsize.setFont(font);
 		morecoloroptions.setFont(font);
 		customisetextcolortoggle.setFont(font);
 		minimize.setFont(font);
-		topbar.setFont(new Font(GUI.textfont + "", Font.BOLD, 13*GUI.textsizer/100));
+		topbar.setFont(new Font(GUI.textfont + "", Font.BOLD, 13));
 		showaccuracy.setFont(font);
 		clipboardreader.setFont(font);
 		clipboardreaderdelay.setFont(font);
@@ -286,13 +253,9 @@ public class Settings implements ActionListener, ChangeListener {
 		copycoordstocb.setFont(font);
 		showdistance.setFont(font);
 		distancefrom.setFont(font);
-		showchunkdistancefromportal.setFont(font);
-		portalinputfield.setFont(font);
 		shownethercoords.setFont(font);
 		nethercoordsdecimals.setFont(font);
 		showchunkcoords.setFont(font);
-		showchunkdistance.setFont(font);
-		showchunkdistancefromeyethrow.setFont(font);
 		alwaysontop.setFont(font);
 		translucent.setFont(font);
 		autoclear.setFont(font);
@@ -301,7 +264,6 @@ public class Settings implements ActionListener, ChangeListener {
 		hidewhencleared.setFont(font);
 		showcoordsonhidescreen.setFont(font);
 		textfont.setFont(font);
-		showborders.setFont(font);
 		resize.setFont(font);
 		color.setFont(font);
 		red.setFont(font);
@@ -309,52 +271,18 @@ public class Settings implements ActionListener, ChangeListener {
 		blue.setFont(font);
 		customisetextcolor.setFont(font);
 		
-		showaccuracytoggle.setBorder(borders);
-		clipboardreadertoggle.setBorder(borders);
-		clipboardreaderdelayms.setBorder(textfieldborders);
-		copycoordstocbtoggle.setBorder(borders);
-		showdistancetoggle.setBorder(borders);
-		distancefromtoggle.setBorder(borders);
-		showchunkdistancefromportaltoggle.setBorder(borders);
-		portalinputfieldtoggle.setBorder(borders);
-		shownethercoordstoggle.setBorder(borders);
-		nethercoordsdecimalstoggle.setBorder(borders);
-		showchunkcoordstoggle.setBorder(borders);
-		showchunkdistancefromeyethrowtoggle.setBorder(borders);
-		alwaysontoptoggle.setBorder(borders);
-		translucenttoggle.setBorder(borders);
-		autocleartoggle.setBorder(borders);
-		autoclearmin.setBorder(textfieldborders);
-		hidewhenclearedtoggle.setBorder(borders);
-		showcoordsonhidescreentoggle.setBorder(borders);
-		settextfont.setBorder(borders);
-		showborderstoggle.setBorder(borders);
-		resetsize.setBorder(borders);
-		morecoloroptions.setBorder(borders);
-		customisetextcolortoggle.setBorder(borders);
-		applyclipboardreaderdelayms.setBorder(borders);
-		applyautoclearmin.setBorder(borders);
-		applysettextfont.setBorder(borders);
-		
 		showaccuracy.setVisible(false);
 		showaccuracytoggle.setVisible(false);
 		showdistance.setVisible(false);
 		showdistancetoggle.setVisible(false);
 		distancefrom.setVisible(false);
 		distancefromtoggle.setVisible(false);
-		showchunkdistancefromportal.setVisible(false);
-		showchunkdistancefromportaltoggle.setVisible(false);
-		portalinputfield.setVisible(false);
-		portalinputfieldtoggle.setVisible(false);
 		shownethercoords.setVisible(false);
 		shownethercoordstoggle.setVisible(false);
 		nethercoordsdecimals.setVisible(false);
 		nethercoordsdecimalstoggle.setVisible(false);
 		showchunkcoords.setVisible(false);
 		showchunkcoordstoggle.setVisible(false);
-		showchunkdistance.setVisible(false);
-		showchunkdistancefromeyethrow.setVisible(false);
-		showchunkdistancefromeyethrowtoggle.setVisible(false);
 		showcoordsonhidescreen.setVisible(false);
 		showcoordsonhidescreentoggle.setVisible(false);
 		clipboardreader.setVisible(false);
@@ -380,8 +308,6 @@ public class Settings implements ActionListener, ChangeListener {
 		textfont.setVisible(false);
 		settextfont.setVisible(false);
 		applysettextfont.setVisible(false);
-		showborders.setVisible(false);
-		showborderstoggle.setVisible(false);
 		resize.setVisible(false);
 		resizing.setVisible(false);
 		resetsize.setVisible(false);
@@ -441,13 +367,6 @@ public class Settings implements ActionListener, ChangeListener {
 			applysettextfont.setBounds(156, 5 + settingsnumber * settingsgap, 44, 20);
 			settingsnumber++;
 			
-			showborders.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
-			showborderstoggle.setBounds(140, 5 + settingsnumber * settingsgap, 60, 20);
-			if(GUI.showborders) {
-				showborderstoggle.setText("ON");
-			}
-			settingsnumber++;
-			
 			resize.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
 			resizing.setBounds(50, 7 + settingsnumber * settingsgap, 80, 20);
 			resetsize.setBounds(133, 5 + settingsnumber * settingsgap, 67, 20);
@@ -492,8 +411,6 @@ public class Settings implements ActionListener, ChangeListener {
 			textfont.setVisible(true);
 			settextfont.setVisible(true);
 			applysettextfont.setVisible(true);
-			showborders.setVisible(true);
-			showborderstoggle.setVisible(true);
 			resize.setVisible(true);
 			resizing.setVisible(true);
 			resetsize.setVisible(true);
@@ -584,8 +501,9 @@ public class Settings implements ActionListener, ChangeListener {
 			
 			distancefrom.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
 			distancefromtoggle.setBounds(100, 5 + settingsnumber * settingsgap, 100, 20);
-			if(GUI.DistanceFrom == 2) {
-				distancefromtoggle.setText("2nd Throw");
+			switch(GUI.DistanceFrom) {
+			case 1: distancefromtoggle.setText("2nd Throw"); break;
+			case 2: distancefromtoggle.setText("Both"); break;
 			}
 			settingsnumber++;
 			
@@ -607,30 +525,6 @@ public class Settings implements ActionListener, ChangeListener {
 				showchunkcoordstoggle.setText("ON");
 			}
 			settingsnumber++;
-			
-			showchunkdistance.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
-			settingsnumber++;
-
-			showchunkdistancefromeyethrow.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
-			showchunkdistancefromeyethrowtoggle.setBounds(140, 5 + settingsnumber * settingsgap, 60, 20);
-			if(GUI.ShowChunkDistance) {
-				showchunkdistancefromeyethrowtoggle.setText("ON");
-			}
-			settingsnumber++;
-			
-			showchunkdistancefromportal.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
-			showchunkdistancefromportaltoggle.setBounds(140, 5 + settingsnumber * settingsgap, 60, 20);
-			if(GUI.ShowChunkDistanceFromPortal) {
-				showchunkdistancefromportaltoggle.setText("ON");
-			}
-			settingsnumber++;
-			
-			portalinputfield.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
-			portalinputfieldtoggle.setBounds(140, 5 + settingsnumber * settingsgap, 60, 20);
-			if(GUI.ShowPortalInputField) {
-				portalinputfieldtoggle.setText("ON");
-			}
-			settingsnumber++;
 
 			showcoordsonhidescreen.setBounds(10, 5 + settingsnumber * settingsgap, 150, 20);
 			showcoordsonhidescreentoggle.setBounds(150, 5 + settingsnumber * settingsgap, 50, 20);
@@ -646,19 +540,12 @@ public class Settings implements ActionListener, ChangeListener {
 			showdistancetoggle.setVisible(true);
 			distancefrom.setVisible(true);
 			distancefromtoggle.setVisible(true);
-			showchunkdistancefromportal.setVisible(true);
-			showchunkdistancefromportaltoggle.setVisible(true);
-			portalinputfield.setVisible(true);
-			portalinputfieldtoggle.setVisible(true);
 			shownethercoords.setVisible(true);
 			shownethercoordstoggle.setVisible(true);
 			nethercoordsdecimals.setVisible(true);
 			nethercoordsdecimalstoggle.setVisible(true);
 			showchunkcoords.setVisible(true);
 			showchunkcoordstoggle.setVisible(true);
-			showchunkdistance.setVisible(true);
-			showchunkdistancefromeyethrow.setVisible(true);
-			showchunkdistancefromeyethrowtoggle.setVisible(true);
 			showcoordsonhidescreen.setVisible(true);
 			showcoordsonhidescreentoggle.setVisible(true);
 		}
@@ -735,12 +622,9 @@ public class Settings implements ActionListener, ChangeListener {
 		copycoordstocbtoggle.setBackground(buttons);
 		showdistancetoggle.setBackground(buttons);
 		distancefromtoggle.setBackground(buttons);
-		showchunkdistancefromportaltoggle.setBackground(buttons);
-		portalinputfieldtoggle.setBackground(buttons);
 		shownethercoordstoggle.setBackground(buttons);
 		nethercoordsdecimalstoggle.setBackground(buttons);
 		showchunkcoordstoggle.setBackground(buttons);
-		showchunkdistancefromeyethrowtoggle.setBackground(buttons);
 		alwaysontoptoggle.setBackground(buttons);
 		translucenttoggle.setBackground(buttons);
 		autocleartoggle.setBackground(buttons);
@@ -749,7 +633,6 @@ public class Settings implements ActionListener, ChangeListener {
 		showcoordsonhidescreentoggle.setBackground(buttons);
 		applysettextfont.setBackground(buttons);
 		resetsize.setBackground(buttons);
-		showborderstoggle.setBackground(buttons);
 		morecoloroptions.setBackground(buttons);
 		customisetextcolortoggle.setBackground(buttons);
 		
@@ -767,13 +650,9 @@ public class Settings implements ActionListener, ChangeListener {
 		copycoordstocbtoggle.setForeground(buttontext);
 		showdistancetoggle.setForeground(buttontext);
 		distancefromtoggle.setForeground(buttontext);
-		showchunkdistancefromportaltoggle.setForeground(buttontext);
-		portalinputfield.setForeground(buttontext);
 		shownethercoordstoggle.setForeground(buttontext);
 		nethercoordsdecimalstoggle.setForeground(buttontext);
 		showchunkcoordstoggle.setForeground(buttontext);
-		showchunkdistancefromeyethrowtoggle.setForeground(buttontext);
-		portalinputfieldtoggle.setForeground(buttontext);
 		alwaysontoptoggle.setForeground(buttontext);
 		translucenttoggle.setForeground(buttontext);
 		autocleartoggle.setForeground(buttontext);
@@ -784,7 +663,6 @@ public class Settings implements ActionListener, ChangeListener {
 		settextfont.setForeground(buttontext);
 		applysettextfont.setForeground(buttontext);
 		resetsize.setForeground(buttontext);
-		showborderstoggle.setForeground(buttontext);
 		morecoloroptions.setForeground(buttontext);
 		customisetextcolortoggle.setForeground(buttontext);
 		
@@ -797,13 +675,9 @@ public class Settings implements ActionListener, ChangeListener {
 		copycoordstocb.setForeground(text);
 		showdistance.setForeground(text);
 		distancefrom.setForeground(text);
-		showchunkdistancefromportal.setForeground(text);
-		portalinputfield.setForeground(text);
 		shownethercoords.setForeground(text);
 		nethercoordsdecimals.setForeground(text);
 		showchunkcoords.setForeground(text);
-		showchunkdistance.setForeground(text);
-		showchunkdistancefromeyethrow.setForeground(text);
 		alwaysontop.setForeground(text);
 		translucent.setForeground(text);
 		autoclear.setForeground(text);
@@ -813,7 +687,6 @@ public class Settings implements ActionListener, ChangeListener {
 		showcoordsonhidescreen.setForeground(text);
 		textfont.setForeground(text);
 		resize.setForeground(text);
-		showborders.setForeground(text);
 		color.setForeground(text);
 		red.setForeground(text);
 		green.setForeground(text);
@@ -921,10 +794,11 @@ public class Settings implements ActionListener, ChangeListener {
 		}
 		
 		if(e.getSource() == distancefromtoggle) {
-			GUI.DistanceFrom = (GUI.DistanceFrom + 1) % 2;
+			GUI.DistanceFrom = (GUI.DistanceFrom + 1) % 3;
 			switch(GUI.DistanceFrom) {
 			case 0: distancefromtoggle.setText("1st Throw"); break;
 			case 1: distancefromtoggle.setText("2nd Throw"); break;
+			case 2: distancefromtoggle.setText("Both"); break;
 			}
 			GUI.pref.putInt("DistanceFrom", GUI.DistanceFrom);
 		}
@@ -1035,19 +909,6 @@ public class Settings implements ActionListener, ChangeListener {
 			GUI.pref.putInt("textsizer", GUI.textsizer);
 		}
 		
-		if(e.getSource() == showborderstoggle) {
-			if(GUI.showborders) {
-				showborderstoggle.setText("OFF");
-			}
-			else {
-				showborderstoggle.setText("ON");
-			}
-			GUI.showborders = !GUI.showborders;
-			GUI.pref.putBoolean("showborders", GUI.showborders);
-			GUI.Resize(GUI.m);
-			GUI();
-		}
-		
 		if(e.getSource() == resetsize) {
 			GUI.m = 100;
 			GUI.Resize(100);
@@ -1071,7 +932,6 @@ public class Settings implements ActionListener, ChangeListener {
 			GUI.customisetextcolor = !GUI.customisetextcolor;
 			SetColor(GUI.g);
 			GUI.SetColor(GUI.g);
-			GUI.pref.putBoolean("customisetextcolor", GUI.customisetextcolor);
 		}
 		
 		if(e.getSource() == copycoordstocbtoggle) {
@@ -1083,40 +943,6 @@ public class Settings implements ActionListener, ChangeListener {
 			}
 			GUI.copycoordstocb = !GUI.copycoordstocb;
 			GUI.pref.putBoolean("copycoordstocb", GUI.copycoordstocb);
-		}
-		
-		if(e.getSource() == showchunkdistancefromeyethrowtoggle) {
-			if(GUI.ShowChunkDistance) {
-				showchunkdistancefromeyethrowtoggle.setText("OFF");
-			}
-			else {
-				showchunkdistancefromeyethrowtoggle.setText("ON");
-			}
-			GUI.ShowChunkDistance = !GUI.ShowChunkDistance;
-			GUI.pref.putBoolean("ShowChunkDistance", GUI.ShowChunkDistance);
-		}
-		
-		if(e.getSource() == showchunkdistancefromportaltoggle) {
-			GUI.ShowChunkDistanceFromPortal = !GUI.ShowChunkDistanceFromPortal;
-			if(GUI.ShowChunkDistanceFromPortal) {
-				showchunkdistancefromportaltoggle.setText("ON");
-			}
-			else {
-				showchunkdistancefromportaltoggle.setText("OFF");
-			}
-			GUI.pref.putBoolean("ShowChunkDistanceFromPortal", GUI.ShowChunkDistanceFromPortal);
-		}
-		
-		if(e.getSource() == portalinputfieldtoggle) {
-			GUI.ShowPortalInputField = !GUI.ShowPortalInputField;
-			if(GUI.ShowPortalInputField) {
-				portalinputfieldtoggle.setText("ON");
-			}
-			else {
-				portalinputfieldtoggle.setText("OFF");
-			}
-			GUI.pref.putBoolean("ShowPortalInputField", GUI.ShowPortalInputField);
-			GUI.Resize(GUI.m);
 		}
 		
 		if(e.getSource() == close) {

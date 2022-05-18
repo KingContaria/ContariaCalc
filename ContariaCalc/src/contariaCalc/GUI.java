@@ -10,8 +10,6 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.util.prefs.Preferences;
 
@@ -23,13 +21,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
-public class GUI implements ActionListener, KeyListener {
+public class GUI implements ActionListener {
 	
 	static JFrame frame = new JFrame("ContariaCalc");
 	static JPanel panel = new MotionPanel(frame);
 	static JButton close = new JButton("×");
 	static JButton minimize = new JButton("_");
-	static JLabel topbar = new JLabel("ContariaCalc v1.1.8");
+	static JLabel topbar = new JLabel("ContariaCalc v1.1.7");
 	static JLabel topbar2 = new JLabel();
 	static JButton hide = new JButton("...");
 	static JButton find = new JButton("Find");
@@ -37,11 +35,10 @@ public class GUI implements ActionListener, KeyListener {
 	static JButton clear = new JButton("Clear");
 	static JLabel xza1 = new JLabel("x z a");
 	static JLabel xza2 = new JLabel("x z a");
-	static JLabel xz = new JLabel("cx cz");
 	static JLabel sh = new JLabel("SH:");
-	static JLabel chunkdistance1 = new JLabel("");
-	static JLabel chunkdistance2 = new JLabel("");
-	static JLabel portalchunkdistance = new JLabel("test");
+	static JLabel distance1 = new JLabel();
+	static JLabel distance2 = new JLabel();
+	static JLabel distance3 = new JLabel();
 	static JLabel result = new JLabel();
 	static JLabel nethercoords = new JLabel("Nether:");
 	static JLabel nethercoords_ = new JLabel();
@@ -49,9 +46,6 @@ public class GUI implements ActionListener, KeyListener {
 	static JLabel chunkcoords_ = new JLabel();
 	static JTextField firstcoords = new JTextField();
 	static JTextField secondcoords = new JTextField();
-	static JTextField portalchunkcoords = new JTextField();
-	static JButton justtogetnormalborderlayout = new JButton();
-	static JTextField justtogetnormalborderlayout2 = new JTextField();
 	static Image icon = Toolkit.getDefaultToolkit().getImage("images/ender_eye.png");
 	
 	//Options
@@ -64,9 +58,6 @@ public class GUI implements ActionListener, KeyListener {
 	public static boolean ShowNetherCoords = false;
 	public static int NetherCoordsDecimals = 0;
 	public static boolean ShowChunkCoords = false;
-	public static boolean ShowChunkDistance = false;
-	public static boolean ShowChunkDistanceFromPortal = false;
-	public static boolean ShowPortalInputField = false;
 	public static boolean marginoferror = false;
 	public static boolean AlwaysOnTop = true ;
 	public static boolean Translucent = false;
@@ -80,11 +71,10 @@ public class GUI implements ActionListener, KeyListener {
 	public static boolean customisetextcolor = false;
 	public static String textfont = "Arial";
 	public static int textsizer = 100;
-	public static boolean showborders = true;
 	
 	//Processing variables for functions
 	static int extracoords = 0;
-	static int portalinput = 0;
+	static int framex_extra = 0;
 	public static int numberofcalculations = 0;
 	public static boolean hidden = false;
 	public static boolean overwritefirst = true;
@@ -136,26 +126,30 @@ public class GUI implements ActionListener, KeyListener {
 		panel.add(settings);
 		panel.add(clear);
 		panel.add(hide);
+		
 		panel.add(firstcoords);
 		panel.add(xza1);
-		panel.add(chunkdistance1);
+		panel.add(distance1);
+		
 		panel.add(secondcoords);
 		panel.add(xza2);
-		panel.add(chunkdistance2);
-		panel.add(portalchunkcoords);
-		panel.add(xz);
-		panel.add(portalchunkdistance);
+		panel.add(distance2);
+		
 		panel.add(find);
+		
 		panel.add(sh);
 		panel.add(result);
+		
 		panel.add(nethercoords);
 		nethercoords.setVisible(false);
 		panel.add(nethercoords_);
 		nethercoords_.setVisible(false);
+		
 		panel.add(chunkcoords);
 		chunkcoords.setVisible(false);
 		panel.add(chunkcoords_);
 		chunkcoords_.setVisible(false);
+		
 		
 		find.addActionListener(this);
 		settings.addActionListener(this);
@@ -163,7 +157,8 @@ public class GUI implements ActionListener, KeyListener {
 		hide.addActionListener(this);
 		close.addActionListener(this);
 		minimize.addActionListener(this);
-		frame.addKeyListener(this);
+		
+		GetPreferences();
 			
 		}
 	
@@ -177,9 +172,6 @@ public class GUI implements ActionListener, KeyListener {
 		ShowNetherCoords = pref.getBoolean("ShowNetherCoords", ShowNetherCoords);
 		NetherCoordsDecimals = pref.getInt("NetherCoordsDecimals", NetherCoordsDecimals);
 		ShowChunkCoords = pref.getBoolean("ShowChunkCoords", ShowChunkCoords);
-		ShowChunkDistance = pref.getBoolean("ShowChunkDistance", ShowChunkDistance);
-		ShowChunkDistanceFromPortal = pref.getBoolean("ShowChunkDistanceFromPortal", ShowChunkDistanceFromPortal);
-		ShowPortalInputField = pref.getBoolean("ShowPortalInputField", ShowPortalInputField);
 		marginoferror = pref.getBoolean("marginoferror", marginoferror);
 		AlwaysOnTop = pref.getBoolean("AlwaysOnTop", AlwaysOnTop);
 		Translucent = pref.getBoolean("Translucent", Translucent);
@@ -192,119 +184,82 @@ public class GUI implements ActionListener, KeyListener {
 		c[0] = pref.getInt("c0", 100);
 		c[1] = pref.getInt("c1", 100);
 		c[2] = pref.getInt("c2", 100);
-		customisetextcolor = pref.getBoolean("customisetextcolor", customisetextcolor);
 		textfont = pref.get("textfont", textfont);
 		textsizer = pref.getInt("textsizer", textsizer);
-		showborders = pref.getBoolean("showborders", showborders);
 		
 	}
 	
 	public static void Resize(int m) {
 		
 		int changeextracoordspos = 0;
-		portalinput = 0;
-		
-		if(ShowPortalInputField) {
-			portalinput = 25;
-			changeextracoordspos += 25;
-			portalchunkcoords.setVisible(true);
-			xz.setVisible(true);
-			portalchunkdistance.setVisible(true);
-		}
-		else {
-			portalchunkcoords.setVisible(false);
-			xz.setVisible(false);
-			portalchunkdistance.setVisible(false);
-		}
-		
-		int reduceinputfields = 0;
-		if(chunkdistance1.getText() != "") {
-			reduceinputfields = 1;
-		}
+		int framexextra_m = 1;
 		
 		if(hidden) {
 			int extra = 0;
 			if(ShowCoordsOnHideScreen > 0) {
-				if(result.getText() != "") {
+				if(result.getText().equals("")) {
+				}
+				else {
 					extra = 20;
 				}
 			}
 			if(ShowCoordsOnHideScreen == 2) {
 				extra += 5 + extracoords*20;
 			}
-			frame.setSize(220*m/100, (52+extra)*m/100 + 5);
-			changeextracoordspos = -85;
+			frame.setSize(220*m/100, (50+extra)*m/100 + 5);
+			framexextra_m = 0;
+			changeextracoordspos = 85;
 		} 
 		else {
-			frame.setSize(220*m/100, (162+portalinput+extracoords*20)*m/100);
+			frame.setSize((220+framex_extra)*m/100, (165+extracoords*20)*m/100); 
 		}
 		
 		Font font = new Font(textfont + "", Font.BOLD, 12*m/100*textsizer/100);
-		
-		Border borders = justtogetnormalborderlayout.getBorder();
-		Border textfieldborders = justtogetnormalborderlayout2.getBorder();
-		if(!showborders) {
-			borders = BorderFactory.createEmptyBorder();
-			textfieldborders = BorderFactory.createEmptyBorder();
-		}
 
-		topbar2.setBounds(0, 0, frame.getWidth(), 25*m/100);
-		close.setBounds(frame.getWidth()-25*m/100, 0, 25*m/100, 25*m/100);
+		topbar2.setBounds(0, 0, (220+framex_extra)*m/100, 25*m/100);
+		close.setBounds(((220+framex_extra*framexextra_m)*m/100)-25*m/100, 0, 25*m/100, 25*m/100);
 		close.setFont(new Font("Arial", Font.BOLD, 24*m/100));
-		minimize.setBounds(frame.getWidth()-50*m/100, 0, 25*m/100, 25*m/100);
+		minimize.setBounds(((220+framex_extra*framexextra_m)*m/100)-50*m/100, 0, 25*m/100, 25*m/100);
 		minimize.setFont(new Font("Arial", Font.BOLD, 16*m/100));
-		topbar.setBounds(10*m/100, 0, frame.getWidth() - 50*m/100, 25*m/100);
+		topbar.setBounds(10*m/100, 0, (151+framex_extra*framexextra_m)*m/100, 25*m/100);
 		topbar.setFont(new Font(textfont + "", Font.BOLD, 13*m/100*textsizer/100));
 		
 		settings.setBounds(35*m/100, 30*m/100, 85*m/100, 20*m/100);
 		settings.setFont(font);
-		settings.setBorder(borders);
 		clear.setBounds(125*m/100, 30*m/100, 85*m/100, 20*m/100);
 		clear.setFont(font);
-		clear.setBorder(borders);
 		hide.setBounds(10*m/100, 30*m/100, 20*m/100, 20*m/100);
 		hide.setFont(font);
-		hide.setBorder(borders);
 		
-		firstcoords.setBounds(45*m/100, 60*m/100, (160-50*reduceinputfields)*m/100, 20*m/100);
-		firstcoords.setBorder(textfieldborders);
+		firstcoords.setBounds(45*m/100, 60*m/100, 160*m/100, 20*m/100);
 		xza1.setBounds(10*m/100, 60*m/100, 30*m/100, 20*m/100);
 		xza1.setFont(font);
-		chunkdistance1.setBounds(160*m/100, 60*m/100, 60*m/100, 20*m/100);
-		chunkdistance1.setFont(font);
+		distance1.setBounds(210*m/100, 60*m/100, 50*m/100, 20*m/100);
+		distance1.setFont(font);
 			
-		secondcoords.setBounds(45*m/100, 85*m/100, (160-50*reduceinputfields)*m/100, 20*m/100);
-		secondcoords.setBorder(textfieldborders);
+		secondcoords.setBounds(45*m/100, 85*m/100, 160*m/100, 20*m/100);
 		xza2.setBounds(10*m/100, 85*m/100, 30*m/100, 20*m/100);
 		xza2.setFont(font);
-		chunkdistance2.setBounds(160*m/100, 85*m/100, 60*m/100, 20*m/100);
-		chunkdistance2.setFont(font);
+		distance2.setBounds(210*m/100, 85*m/100, 50*m/100, 20*m/100);
+		distance2.setFont(font);
 		
-		portalchunkcoords.setBounds(45*m/100, 110*m/100, (160-50*reduceinputfields)*m/100, 20*m/100);
-		portalchunkcoords.setBorder(textfieldborders);
-		xz.setBounds(10*m/100, 110*m/100, 30*m/100, 20*m/100);
-		xz.setFont(font);
-		portalchunkdistance.setBounds(160*m/100, 110*m/100, 60*m/100, 20*m/100);
-		portalchunkdistance.setFont(font);
-		
-		find.setBounds(75*m/100, (112+portalinput)*m/100, 70*m/100, 25*m/100);
+		find.setBounds(75*m/100, 112*m/100, 70*m/100, 25*m/100);
 		find.setFont(font);
-		find.setBorder(borders);
 		
-		sh.setBounds(10*m/100, (140+changeextracoordspos)*m/100, 90*m/100, 20*m/100);
+		sh.setBounds(10*m/100, (140-changeextracoordspos)*m/100, 90*m/100, 20*m/100);
 		sh.setFont(font);
 		
-		nethercoords.setBounds(10*m/100, (160+changeextracoordspos)*m/100, 100*m/100, 20*m/100);
+		nethercoords.setBounds(10*m/100, (160-changeextracoordspos)*m/100, 100*m/100, 20*m/100);
 		nethercoords.setFont(font);
-		nethercoords_.setBounds(65*m/100, (160+changeextracoordspos)*m/100, 100*m/100, 20*m/100);
+		nethercoords_.setBounds(65 * m/100, (160-changeextracoordspos)*m/100, 100*m/100, 20*m/100);
 		nethercoords_.setFont(font);
 		
-		chunkcoords.setBounds(10*m/100, (160+changeextracoordspos+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
+		chunkcoords.setBounds(10*m/100, (160-changeextracoordspos+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
 		chunkcoords.setFont(font);
-		chunkcoords_.setBounds(65*m/100, (160+changeextracoordspos+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
+		chunkcoords_.setBounds(65 * m/100, (160-changeextracoordspos+(extracoords-1)*20)*m/100, 100*m/100, 20*m/100);
 		chunkcoords_.setFont(font);
 		
-		result.setBounds(65*m/100, (140+changeextracoordspos)*m/100, 160*m/100, 20*m/100);
+		result.setBounds(65 * m/100, (140-changeextracoordspos)*m/100, 160*m/100, 20*m/100);
 		result.setFont(font);
 	}
 	
@@ -350,16 +305,13 @@ public class GUI implements ActionListener, KeyListener {
 		hide.setBackground(buttons);
 		firstcoords.setBackground(buttons);
 		secondcoords.setBackground(buttons);
-		portalchunkcoords.setBackground(buttons);
 		find.setBackground(buttons);
 		sh.setForeground(text);
 		xza1.setForeground(text);
 		xza2.setForeground(text);
-		xz.setForeground(text);
 		result.setForeground(text);
-		chunkdistance1.setForeground(text);
-		chunkdistance2.setForeground(text);
-		portalchunkdistance.setForeground(text);
+		distance1.setForeground(text);
+		distance2.setForeground(text);
 		nethercoords.setForeground(text);
 		nethercoords_.setForeground(text);
 		chunkcoords.setForeground(text);
@@ -372,7 +324,6 @@ public class GUI implements ActionListener, KeyListener {
 		find.setForeground(buttontext);
 		firstcoords.setForeground(buttontext);
 		secondcoords.setForeground(buttontext);
-		portalchunkcoords.setForeground(buttontext);
 		topbar2.setBackground(titlebar);
 		minimize.setBackground(titlebar);
 		topbar.setBackground(titlebar);
@@ -382,31 +333,26 @@ public class GUI implements ActionListener, KeyListener {
 	public static void Clear() {
 		
 		if(hidden) {
-			frame.setSize(220*m/100, 52*m/100 + 5);
+			frame.setSize(220*m/100, 50*m/100 + 5);
 		} 
 		else {
-			frame.setSize(220*m/100, (162+portalinput)*m/100);  
+			frame.setSize(220*m/100, 165*m/100);  
 		}
 
 		close.setBounds((220*m/100)-25*m/100, 0, 25*m/100, 25*m/100);
 		minimize.setBounds((220*m/100)-50*m/100, 0, 25*m/100, 25*m/100);
 		
-		firstcoords.setBounds(45*m/100, 60*m/100, 160*m/100, 20*m/100);
-		secondcoords.setBounds(45*m/100, 85*m/100, 160*m/100, 20*m/100);
-		portalchunkcoords.setBounds(45*m/100, 110*m/100, 160*m/100, 20*m/100);
-		
 		result.setText("");
 		firstcoords.setText("");
 		secondcoords.setText("");
-		portalchunkcoords.setText("");
-		chunkdistance1.setText("");
-		chunkdistance2.setText("");
-		portalchunkdistance.setText("");
+		distance1.setText("");
+		distance2.setText("");
 		nethercoords.setVisible(false);
 		nethercoords_.setVisible(false);
 		chunkcoords.setVisible(false);
 		chunkcoords_.setVisible(false);
 		extracoords = 0;
+		framex_extra = 0;
 		numberofcalculations++;
 		
 		if(HideWhenCleared) {
@@ -423,55 +369,75 @@ public class GUI implements ActionListener, KeyListener {
 		firstcoords.setVisible(hidden);
 		secondcoords.setVisible(hidden);
 		find.setVisible(hidden);
-		chunkdistance1.setVisible(hidden);
-		chunkdistance2.setVisible(hidden);
+		distance1.setVisible(hidden);
+		distance2.setVisible(hidden);
 		hidden = !hidden;
 		Resize(m);
 	}
 	
 	public static void Find() {
 
+		framex_extra = 0;
 		numberofcalculations++;
-		extracoords = 0;
-		nethercoords.setVisible(false);
-		nethercoords_.setVisible(false);
-		chunkcoords.setVisible(false);
-		chunkcoords_.setVisible(false);
-		chunkdistance1.setText("");
-		chunkdistance2.setText("");
-		String[] results = Calc.Calculationinputoutput(firstcoords.getText(), secondcoords.getText());
+		String sh_coordsraw = Calc.Calculationinputoutput(firstcoords.getText(), secondcoords.getText());
 		Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
-		if(results[0].equals("Error")) {
+		if(sh_coordsraw.equals("Error")) {
 			result.setText("Error");
+			if(copycoordstocb) {
+				StringSelection ss = new StringSelection(sh_coordsraw);
+				cb.setContents(ss, ss);
+			}
 		}
 		else {
+		String[] sh_coordssplit = sh_coordsraw.split(" / ");
+		String sh_coords = sh_coordssplit[0];
+		distance1.setText("");
+		distance2.setText("");
 		nethercoords.setVisible(ShowNetherCoords);
 		nethercoords_.setVisible(ShowNetherCoords);
 		chunkcoords.setVisible(ShowChunkCoords);
 		chunkcoords_.setVisible(ShowChunkCoords);
 		if(ShowDistance) {
 			switch(DistanceFrom) {
-			case 0:	results[0] = results[0] + " (D: " + Calc.DistanceCalc(firstcoords.getText(), results[0]) + ")"; break;
-			case 1: results[0] = results[0] + " (D: " + Calc.DistanceCalc(secondcoords.getText(), results[0]) + ")"; break;
+			case 0:	sh_coords = sh_coords + " (D: " + Calc.DistanceCalc(firstcoords.getText(), sh_coords) + ")"; break;
+			case 1: sh_coords = sh_coords + " (D: " + Calc.DistanceCalc(secondcoords.getText(), sh_coords) + ")"; break;
+			case 2: distance1.setText("D: " + Calc.DistanceCalc(firstcoords.getText(), sh_coords));
+					distance2.setText("D: " + Calc.DistanceCalc(secondcoords.getText(), sh_coords));
+					framex_extra = 35;
 			}
 		}
 		
+		extracoords = 0;
+		
 		if(ShowNetherCoords) {
-			nethercoords_.setText(results[1]);
+			nethercoords_.setText(sh_coordssplit[1]);
 			extracoords++;
 		}
 		
 		if(ShowChunkCoords) {
 			chunkcoords.setBounds(10*m/100, (160+extracoords*20)*m/100, 100*m/100, 20*m/100);
-			chunkcoords_.setText(results[2]);
+			chunkcoords_.setText(sh_coordssplit[2]);
 			extracoords++;
 		}
 		
-		result.setText(results[0]);
+		frame.setSize((210+framex_extra)*m/100, (165+extracoords*20)*m/100);
+		
+		if(CoordsOverlay == true) {
+			new CoordsOverlay(sh_coords);
+		}
+		
+		result.setText(sh_coords);
 		
 		if(hidden) {
 			hidden = false;
 			Hide();
+		}
+		
+		Resize(m);
+
+		if(copycoordstocb) {
+			StringSelection ss = new StringSelection(sh_coords);
+			cb.setContents(ss, ss);
 		}
 		
 		}
@@ -489,13 +455,6 @@ public class GUI implements ActionListener, KeyListener {
 	            }
 	        }.start();
 		}
-
-		if(copycoordstocb) {
-			StringSelection ss = new StringSelection(results[0]);
-			cb.setContents(ss, ss);
-		}
-		
-		Resize(m);
 	}
 			
 
@@ -508,9 +467,16 @@ public class GUI implements ActionListener, KeyListener {
 		
 		if(e.getSource() == settings) {
 			Settings.settings.setVisible(!Settings.settings.isVisible());
+			int x = 0;
+			if(hidden) {
+				x = 225*m/100;
+			} 
+			else {
+				x = (225+framex_extra)*m/100; 
+			}
 			GraphicsDevice gd = MouseInfo.getPointerInfo().getDevice();
-			if(frame.getX() + frame.getWidth() + 210 < gd.getDisplayMode().getWidth()) {
-				Settings.settings.setLocation(frame.getX() + frame.getWidth() + 5, frame.getY());
+			if(frame.getX() + x + 210 < gd.getDisplayMode().getWidth()) {
+				Settings.settings.setLocation(frame.getX() + x, frame.getY());
 			}
 			else {
 				Settings.settings.setLocation(frame.getX() - 215, frame.getY());
@@ -534,29 +500,4 @@ public class GUI implements ActionListener, KeyListener {
 		if(e.getSource() == minimize) {
 			frame.setState(JFrame.ICONIFIED);
 		}
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		
-		System.out.println("Key pressed");
-
-		switch(e.getKeyCode()) {
-		case 67:
-			Clear(); break;
-		}
-		
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-}
+	}}
