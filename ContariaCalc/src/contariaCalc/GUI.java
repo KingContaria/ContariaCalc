@@ -27,7 +27,7 @@ public class GUI implements ActionListener {
 	static JPanel panel = new MotionPanel(frame);
 	static JButton close = new JButton("×");
 	static JButton minimize = new JButton("_");
-	static JLabel topbar = new JLabel("ContariaCalc v1.1.7");
+	static JLabel topbar = new JLabel("ContariaCalc v1.1.7.1");
 	static JLabel topbar2 = new JLabel();
 	static JButton hide = new JButton("...");
 	static JButton find = new JButton("Find");
@@ -353,6 +353,7 @@ public class GUI implements ActionListener {
 		chunkcoords_.setVisible(false);
 		extracoords = 0;
 		framex_extra = 0;
+		GUI.overwritefirst = true;
 		numberofcalculations++;
 		
 		if(HideWhenCleared) {
