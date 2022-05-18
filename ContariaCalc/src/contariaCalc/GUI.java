@@ -49,7 +49,6 @@ public class GUI implements ActionListener {
 	static Image icon = Toolkit.getDefaultToolkit().getImage("images/ender_eye.png");
 	
 	//Options
-	public static boolean CoordsOverlay = false;
 	public static boolean ClipboardReader = false;
 	public static int ClipboardreaderDelay = 1000;
 	public static boolean copycoordstocb = false;
@@ -422,10 +421,6 @@ public class GUI implements ActionListener {
 		}
 		
 		frame.setSize((210+framex_extra)*m/100, (165+extracoords*20)*m/100);
-		
-		if(CoordsOverlay == true) {
-			new CoordsOverlay(sh_coords);
-		}
 		
 		result.setText(sh_coords);
 		
